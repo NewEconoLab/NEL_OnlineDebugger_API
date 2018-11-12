@@ -20,6 +20,10 @@ namespace NEL_OnlineDebuger_API
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+                .UseKestrel(options =>
+                {
+                    options.Listen(IPAddress.Any, 87);
+                })
                 .Build();
     }
 }
