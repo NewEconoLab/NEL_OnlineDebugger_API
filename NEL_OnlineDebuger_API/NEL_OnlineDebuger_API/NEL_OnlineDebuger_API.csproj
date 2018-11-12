@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.8" />
+    <PackageReference Include="MongoDB.Driver" Version="2.7.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="llvm">
+      <HintPath>dll\llvm.dll</HintPath>
+    </Reference>
+    <Reference Include="thinSDK">
+      <HintPath>dll\thinSDK.dll</HintPath>
+    </Reference>
+    <Reference Include="thinSDK_neo">
+      <HintPath>dll\thinSDK_neo.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
