@@ -5,6 +5,8 @@ using NEL_OnlineDebuger_API.lib;
 using NEL_Wallet_API.lib;
 using NEL_Wallet_API.Service;
 using System.Threading.Tasks;
+using NEL_OnlineDebuger_API.Service;
+using NEL_Wallet_API.Controllers;
 
 namespace NEL_OnlineDebuger_API.Controllers
 {
@@ -13,6 +15,7 @@ namespace NEL_OnlineDebuger_API.Controllers
         private string netnode { get; set; }
         private ClaimGasService claimService;
         private ClaimGasTransaction claimTx4testnet;
+        private CompileService compileService;
 
         private mongoHelper mh = new mongoHelper();
 
@@ -27,6 +30,13 @@ namespace NEL_OnlineDebuger_API.Controllers
             switch (netnode)
             {
                 case "testnet":
+                    compileService = new CompileService
+                    {
+                        mh = mh,
+                        notify_mongodbConnStr = mh.notify_mongodbConnStr_testnet,
+                        notify_mongodbDatabase = mh.notify_mongodbDatabase_testnet,
+                        ossClient = new OssFileService("http://47.98.124.225:84/api/testnet/")
+                    };
                     claimService = new ClaimGasService
                     {
                         assetid = mh.id_gas,
@@ -69,6 +79,15 @@ namespace NEL_OnlineDebuger_API.Controllers
             {
                 switch (req.method)
                 {
+                    case "saveCompileFile":
+                        result = compileService.saveContractFile(req.@params[0].ToString(), req.@params[1].ToString());
+                        break;
+                    case "getCompileFile":
+                        result = compileService.getCompileFile(req.@params[0].ToString());
+                        break;
+                    case "compile":
+                        result = compileService.compileFile(req.@params[0].ToString(), req.@params[1].ToString());
+                        break;
                     // 查询是否可以申领Gas
                     case "hasclaimgas":
                         result = claimService.hasClaimGas(req.@params[0].ToString());
