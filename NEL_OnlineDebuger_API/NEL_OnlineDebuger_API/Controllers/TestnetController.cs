@@ -21,7 +21,6 @@ namespace NEL_OnlineDebuger_API.Controllers
         [HttpGet]
         public JsonResult Get(string @jsonrpc, string @method, string @params, long @id)
         {
-            test();
             DateTime start = DateTime.Now;
             JsonResult res = null;
             JsonRPCrequest req = null;
@@ -57,39 +56,10 @@ namespace NEL_OnlineDebuger_API.Controllers
 
             return res;
         }
-
-        public void test()
-        {
-            Console.WriteLine("*********************************************print.request.st");
-            var r1 = HttpContext.Request.ContentType;
-            Console.WriteLine("contentType:"+r1);
-            var r2 = HttpContext.Request.ContentLength;
-            Console.WriteLine("contentLength:"+r2);
-            var r3 = HttpContext.Request.Host;
-            Console.WriteLine("Host:"+r3);
-            var r4 = HttpContext.Request.IsHttps;
-            Console.WriteLine("IsHttps:"+r4);
-
-            Console.WriteLine("Method:"+ HttpContext.Request.Method);
-            Console.WriteLine("Path:"+ HttpContext.Request.Path);
-            Console.WriteLine("PathBase:"+ HttpContext.Request.PathBase);
-            Console.WriteLine("Protocol:"+ HttpContext.Request.Protocol);
-
-            var r5 = HttpContext.Request.Headers;
-            Console.WriteLine("Headers:");
-            foreach(var s in r5)
-            {
-                Console.WriteLine("\t"+s.Key + " ---> " + s.Value);
-            }
-
-            var r6 = HttpContext.Request.Body;
-            Console.WriteLine("body:"+r6);
-            Console.WriteLine("*********************************************print.request.ed");
-        }
+        
         [HttpPost]
         public async Task<JsonResult> Post()
         {
-            test();
             DateTime start = DateTime.Now;
             JsonResult res = null;
             JsonRPCrequest req = null;

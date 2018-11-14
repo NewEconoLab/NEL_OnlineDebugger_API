@@ -21,9 +21,7 @@ namespace NEL_OnlineDebuger_API.Controllers
         private mongoHelper mh = new mongoHelper();
 
         private static Api testApi = new Api("testnet");
-        private static Api mainApi = new Api("mainnet");
         public static Api getTestApi() { return testApi; }
-        public static Api getMainApi() { return mainApi; }
 
         public Api(string node)
         {

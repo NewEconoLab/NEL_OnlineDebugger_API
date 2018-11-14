@@ -1,8 +1,4 @@
 ﻿using NEL_Wallet_API.lib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace NEL_Wallet_API.Controllers
 {

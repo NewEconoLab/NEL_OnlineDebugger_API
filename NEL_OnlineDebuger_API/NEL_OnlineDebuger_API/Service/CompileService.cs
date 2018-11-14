@@ -54,28 +54,6 @@ namespace NEL_OnlineDebuger_API.Service
             return new JArray(){ new JObject() { { "code", "0000"}, { "message", "编译成功"}, {"result", new JObject() { {"hash", hash } } } }};
         }
         
-        public JArray getCompileResult(string filehash)
-        {
-            string findStr = new JObject() { {"filehash", filehash } }.ToString();
-            var query = mh.GetData(notify_mongodbConnStr, notify_mongodbDatabase, compilefileCol, findStr);
-            if(query == null || query.Count == 0)
-            {
-                return new JArray() { new JObject() { { "code", "1001" }, { "message", "无效文件哈希" },{ "result","[]"} } };
-            }
-            string state = query[0]["state"].ToString();
-            string error = query[0]["error"].ToString();
-            if (state == "0")
-            {
-                return new JArray() { new JObject() { { "code", "1002" }, { "message", "等待编译" }, { "result", "[]" } } };
-            }
-            if (state == "1")
-            {
-                return new JArray() { new JObject() { { "code", "0000" }, { "message", "编译成功" }, { "result", downloadCompileFile(filehash) } } };
-            }
-            
-            return new JArray() { new JObject() { { "code", "1003" }, { "message", error }, { "result", "[]" } } }; // 编译失败
-        }
-        
         public JArray uploadContractFile(string address, string hash)
         {
             // 保存合约文件
@@ -83,7 +61,7 @@ namespace NEL_OnlineDebuger_API.Service
             var query = mh.GetData(notify_mongodbConnStr, notify_mongodbDatabase, compilefileCol, findStr);
             if(query == null || query.Count == 0)
             {
-                return new JArray() { new JObject() { { "code", "1001" }, { "message", "没有找到文件" }, { "result", "[]" } } };
+                return new JArray() { new JObject() { { "code", "1001" }, { "message", "没有找到文件" }} };
             }
 
             string cs = query[0]["cs"].ToString();
@@ -94,7 +72,7 @@ namespace NEL_OnlineDebuger_API.Service
             ossClient.OssFileUpload(hash + ".avm", avm);
             ossClient.OssFileUpload(hash + ".abi.json", abi);
             ossClient.OssFileUpload(hash + ".map.json", map);
-            return new JArray() { new JObject() { { "code", "0000" }, { "message", "保存成功" }, { "result", "[]" } } };
+            return new JArray() { new JObject() { { "code", "0000" }, { "message", "保存成功" } } };
         }
         public JArray downloadCompileFile(string hash)
         {
@@ -111,7 +89,6 @@ namespace NEL_OnlineDebuger_API.Service
             JO_result["abi"] = JO_abi.ToString();
             return new JArray() { JO_result };
         }
-
 
         public JArray deployContract()
         {
