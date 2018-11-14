@@ -22,8 +22,7 @@ namespace NEL_OnlineDebuger_API.lib
         public string notify_mongodbDatabase_testnet = string.Empty;
         public string neoCliJsonRPCUrl_testnet = string.Empty;
         public string nelJsonRPCUrl_testnet = string.Empty;
-        public string bonusConnStr_testnet = string.Empty;
-        public string bonusDatabase_testnet = string.Empty;
+        public string nelOssRPCUrl_testnet = string.Empty;
 
 
         public string block_mongodbConnStr_mainnet = string.Empty;
@@ -34,18 +33,7 @@ namespace NEL_OnlineDebuger_API.lib
         public string notify_mongodbDatabase_mainnet = string.Empty;
         public string neoCliJsonRPCUrl_mainnet = string.Empty;
         public string nelJsonRPCUrl_mainnet = string.Empty;
-        
-        
-        public string bonusNotifyCol_testnet = string.Empty;
-        public string bonusNotifyFrom_testnet = string.Empty;
-        public string bonusNotifyCol_mainnet = string.Empty;
-        public string bonusNotifyFrom_mainnet = string.Empty;
-
-        public string rechargeCollection_mainnet = string.Empty;
-        public string rechargeCollection_testnet = string.Empty;
-
-        public string domainOwnerCol_testnet = string.Empty;
-        public string domainOwnerCol_mainnet = string.Empty;
+        public string nelOssRPCUrl_mainnet = string.Empty;
         
         public string id_neo = string.Empty;
         public string id_gas = string.Empty;
@@ -61,13 +49,7 @@ namespace NEL_OnlineDebuger_API.lib
         public string checkTxInterval_mainnet = string.Empty;
         public string checkTxCount_testnet = string.Empty;
         public string checkTxCount_mainnet = string.Empty;
-
-        public string auctionStateCol_testnet = string.Empty;
-        public string auctionStateCol_mainnet = string.Empty;
-        public string cgasUtxoCol_testnet = string.Empty;
-        public string cgasUtxoCol_mainnet = string.Empty;
-        public string cgasBalanceStateCol_testnet = string.Empty;
-        public string cgasBalanceStateCol_mainnet = string.Empty;
+        
 
         public mongoHelper() {
             var config = new ConfigurationBuilder()
@@ -86,8 +68,7 @@ namespace NEL_OnlineDebuger_API.lib
             notify_mongodbDatabase_testnet = config["notify_mongodbDatabase_testnet"];
             neoCliJsonRPCUrl_testnet = config["neoCliJsonRPCUrl_testnet"];
             nelJsonRPCUrl_testnet = config["nelJsonRPCUrl_testnet"];
-            bonusConnStr_testnet = config["bonusConnStr_testnet"];
-            bonusDatabase_testnet = config["bonusDatabase_testnet"];
+            nelOssRPCUrl_testnet = config["nelOssRPCUrl_testnet"];
 
             block_mongodbConnStr_mainnet = config["block_mongodbConnStr_mainnet"];
             block_mongodbDatabase_mainnet = config["block_mongodbDatabase_mainnet"];
@@ -97,18 +78,8 @@ namespace NEL_OnlineDebuger_API.lib
             notify_mongodbDatabase_mainnet = config["notify_mongodbDatabase_mainnet"];
             neoCliJsonRPCUrl_mainnet = config["neoCliJsonRPCUrl_mainnet"];
             nelJsonRPCUrl_mainnet = config["nelJsonRPCUrl_mainnet"];
+            nelOssRPCUrl_mainnet = config["nelOssRPCUrl_mainnet"];
             
-            bonusNotifyCol_testnet = config["bonusNotifyCol_testnet"];
-            bonusNotifyFrom_testnet = config["bonusNotifyFrom_testnet"];
-            bonusNotifyCol_mainnet = config["bonusNotifyCol_mainnet"];
-            bonusNotifyFrom_mainnet = config["bonusNotifyFrom_mainnet"];
-
-            rechargeCollection_mainnet = config["rechargeCollection_mainnet"];
-            rechargeCollection_testnet = config["rechargeCollection_testnet"];
-
-
-            domainOwnerCol_testnet = config["domainOwnerCol_testnet"];
-            domainOwnerCol_mainnet = config["domainOwnerCol_mainnet"];
 
             id_neo = config["id_neo"];
             id_gas = config["id_gas"];
@@ -126,14 +97,7 @@ namespace NEL_OnlineDebuger_API.lib
             checkTxCount_mainnet = config["checkTxCount_mainnet"];
 
 
-            auctionStateCol_testnet = config["auctionStateCol_testnet"];
-            auctionStateCol_mainnet = config["auctionStateCol_mainnet"];
 
-            cgasUtxoCol_testnet = config["cgasUtxoCol_testnet"];
-            cgasUtxoCol_mainnet = config["cgasUtxoCol_mainnet"];
-
-            cgasBalanceStateCol_testnet = config["cgasBalanceStateCol_testnet"];
-            cgasBalanceStateCol_mainnet = config["cgasBalanceStateCol_mainnet"];
 
         }
 

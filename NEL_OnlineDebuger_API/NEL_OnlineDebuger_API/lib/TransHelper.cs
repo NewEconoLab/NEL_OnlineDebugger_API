@@ -12,25 +12,7 @@ using System.Threading.Tasks;
 
 namespace NEL_Wallet_API.lib
 {
-    public class Utxo
-    {
-        //txid[n] 是utxo的属性
-        public ThinNeo.Hash256 txid;
-        public int n;
-
-        //asset资产、addr 属于谁，value数额，这都是查出来的
-        public string addr;
-        public string asset;
-        public decimal value;
-        public Utxo(string _addr, ThinNeo.Hash256 _txid, string _asset, decimal _value, int _n)
-        {
-            this.addr = _addr;
-            this.txid = _txid;
-            this.asset = _asset;
-            this.value = _value;
-            this.n = _n;
-        }
-    }
+    
     public class TransHelper
     {
         public static string MakeRpcUrlPost(string url, string method, out byte[] data, params MyJson.IJsonNode[] _params)
@@ -158,7 +140,6 @@ namespace NEL_Wallet_API.lib
             }
             return tran;
         }
-
         public static ThinNeo.Transaction makeTran(List<Utxo> utxos, List<string> targetaddrs, ThinNeo.Hash256 assetid, decimal sendcount)
         {
             int cnt = targetaddrs.Count();
@@ -251,6 +232,25 @@ namespace NEL_Wallet_API.lib
         }
     }
 
+    public class Utxo
+    {
+        //txid[n] 是utxo的属性
+        public ThinNeo.Hash256 txid;
+        public int n;
+
+        //asset资产、addr 属于谁，value数额，这都是查出来的
+        public string addr;
+        public string asset;
+        public decimal value;
+        public Utxo(string _addr, ThinNeo.Hash256 _txid, string _asset, decimal _value, int _n)
+        {
+            this.addr = _addr;
+            this.txid = _txid;
+            this.asset = _asset;
+            this.value = _value;
+            this.n = _n;
+        }
+    }
 
     public class AccountInfo
     {

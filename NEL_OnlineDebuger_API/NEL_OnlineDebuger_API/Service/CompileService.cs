@@ -1,5 +1,6 @@
 ﻿using NEL_OnlineDebuger_API.lib;
 using NEL_Wallet_API.Controllers;
+using NEL_Wallet_API.lib;
 using Newtonsoft.Json.Linq;
 using System;
 
@@ -11,6 +12,7 @@ namespace NEL_OnlineDebuger_API.Service
         public string notify_mongodbConnStr { get; set; }
         public string notify_mongodbDatabase { get; set; }
         public string compilefileCol { get; set; } = "onlineDebuger_compilefile";
+        public string deployfileCol { get; set; } = "onlineDebuger_deployfile";
         public OssFileService ossClient { get; set; }
         public CompileDebugger debugger = new CompileDebugger();
 
@@ -51,13 +53,7 @@ namespace NEL_OnlineDebuger_API.Service
             }
             return new JArray(){ new JObject() { { "code", "0000"}, { "message", "编译成功"}, {"result", new JObject() { {"hash", hash } } } }};
         }
-
-        public JArray deployContract()
-        {
-            // 部署合约
-            return null;
-        }
-
+        
         public JArray getCompileResult(string filehash)
         {
             string findStr = new JObject() { {"filehash", filehash } }.ToString();
@@ -74,13 +70,13 @@ namespace NEL_OnlineDebuger_API.Service
             }
             if (state == "1")
             {
-                return new JArray() { new JObject() { { "code", "0000" }, { "message", "编译成功" }, { "result", getCompileFile(filehash) } } };
+                return new JArray() { new JObject() { { "code", "0000" }, { "message", "编译成功" }, { "result", downloadCompileFile(filehash) } } };
             }
             
             return new JArray() { new JObject() { { "code", "1003" }, { "message", error }, { "result", "[]" } } }; // 编译失败
         }
         
-        public JArray saveContractFile(string address, string hash)
+        public JArray uploadContractFile(string address, string hash)
         {
             // 保存合约文件
             string findStr = new JObject() { { "address", address},{"hash", hash }, { "state", "0" } }.ToString();
@@ -100,7 +96,7 @@ namespace NEL_OnlineDebuger_API.Service
             ossClient.OssFileUpload(hash + ".map.json", map);
             return new JArray() { new JObject() { { "code", "0000" }, { "message", "保存成功" }, { "result", "[]" } } };
         }
-        public JArray getCompileFile(string hash)
+        public JArray downloadCompileFile(string hash)
         {
             // 获取合约文件
             string pathScript = "";
@@ -115,5 +111,63 @@ namespace NEL_OnlineDebuger_API.Service
             JO_result["abi"] = JO_abi.ToString();
             return new JArray() { JO_result };
         }
+
+
+        public JArray deployContract()
+        {
+            // 部署合约
+            // 解析交易，提取字段
+            /** 
+             * 部署合约
+             * 1. 解析交易
+             * 2. 提取字段
+             * 3. 检查合约是否被编译过，若无返回
+             * 4. 发送交易
+             * 5. 保存部署信息
+             */
+
+            return null;
+        }
+        public JArray saveContract(string address, string scripthash, string name, string version, string author, string email, string desc, string acceptablePayment, string createStorage, string dynamicCall, string txid)
+        {
+            //address + hash + name + version + author + email + desc + 可接受付款 + 创建存储区 + 动态调用 + txid
+            
+            // 保存部署信息
+            long nowtime = TimeHelper.GetTimeStamp();
+            string newdata = new JObject() {
+                {"address", address },
+                {"scripthash", scripthash },
+                {"name", name },
+                {"version", version },
+                {"author", author },
+                {"email", email },
+                {"desc", desc },
+                {"acceptablePayment", acceptablePayment },
+                {"createStorage", createStorage },
+                {"dynamicCall", dynamicCall },
+                {"txid", txid },
+                {"createTime", nowtime },
+                {"lastUpdateTime", nowtime }
+            }.ToString();
+            mh.InsertOneData(notify_mongodbConnStr, notify_mongodbDatabase, deployfileCol, newdata);
+
+            // 上传编译文件
+            uploadContractFile(address, scripthash);
+            return new JArray() { new JObject() { { "code", "0000" }, { "message", "保存成功" }, { "result", "[]" } } };
+        }
+
+        public JArray getContractRemarkByAddress(string address)
+        {
+            string findStr = new JObject() { {"address", address } }.ToString();
+            string fieldStr = MongoFieldHelper.toReturn(new string[] {"scripthash", "name" }).ToString();
+            return mh.GetDataWithField(notify_mongodbConnStr, notify_mongodbDatabase, deployfileCol, fieldStr, findStr);
+        }
+        public JArray getContractInfoByHash(string scripthash)
+        {
+            string findStr = new JObject() { { "scripthash", scripthash } }.ToString();
+            return mh.GetData(notify_mongodbConnStr, notify_mongodbDatabase, deployfileCol, findStr);
+        }
+
+        
     }
 }
