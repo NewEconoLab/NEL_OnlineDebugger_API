@@ -21,6 +21,7 @@ namespace NEL_OnlineDebuger_API.Controllers
         [HttpGet]
         public JsonResult Get(string @jsonrpc, string @method, string @params, long @id)
         {
+            test();
             DateTime start = DateTime.Now;
             JsonResult res = null;
             JsonRPCrequest req = null;
@@ -88,6 +89,7 @@ namespace NEL_OnlineDebuger_API.Controllers
         [HttpPost]
         public async Task<JsonResult> Post()
         {
+            test();
             DateTime start = DateTime.Now;
             JsonResult res = null;
             JsonRPCrequest req = null;
