@@ -61,7 +61,7 @@ namespace NEL_OnlineDebuger_API.Service
             JObject findJo = new JObject() { { "addr", address },{ "used",""} };
             if(assetid != null && assetid != "")
             {
-                findJo.Add("assetid", format(assetid));
+                findJo.Add("asset", format(assetid));
             }
             string findStr = findJo.ToString();
             string fieldStr = new JObject() {{ "asset", 1 },{ "value", 1 } }.ToString();
