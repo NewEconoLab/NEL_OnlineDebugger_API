@@ -51,7 +51,7 @@ namespace NEL_OnlineDebuger_API.Service
                 }.ToString();
                 mh.InsertOneData(notify_mongodbConnStr, notify_mongodbDatabase, compilefileCol, newdata);
             }
-            return new JArray(){ new JObject() { { "code", "0000"}, { "message", "编译成功"}, {"result", new JObject() { {"hash", hash } } } }};
+            return new JArray(){ new JObject() { { "code", "0000"}, { "message", "编译成功"}, { "hash", hash } } };
         }
         
         public JArray uploadContractFile(string address, string hash)
@@ -130,7 +130,7 @@ namespace NEL_OnlineDebuger_API.Service
 
             // 上传编译文件
             uploadContractFile(address, scripthash);
-            return new JArray() { new JObject() { { "code", "0000" }, { "message", "保存成功" }, { "result", "[]" } } };
+            return new JArray() { new JObject() { { "code", "0000" }, { "message", "保存成功" } } };
         }
 
         public JArray getContractRemarkByAddress(string address)
@@ -139,7 +139,7 @@ namespace NEL_OnlineDebuger_API.Service
             string fieldStr = MongoFieldHelper.toReturn(new string[] {"scripthash", "name" }).ToString();
             return mh.GetDataWithField(notify_mongodbConnStr, notify_mongodbDatabase, deployfileCol, fieldStr, findStr);
         }
-        public JArray getContractInfoByHash(string scripthash)
+        public JArray getContractDeployInfoByHash(string scripthash)
         {
             string findStr = new JObject() { { "scripthash", scripthash } }.ToString();
             return mh.GetData(notify_mongodbConnStr, notify_mongodbDatabase, deployfileCol, findStr);

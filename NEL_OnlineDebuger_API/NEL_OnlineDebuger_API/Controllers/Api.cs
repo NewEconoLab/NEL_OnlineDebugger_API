@@ -85,15 +85,14 @@ namespace NEL_OnlineDebuger_API.Controllers
             {
                 switch (req.method)
                 {
-                    // 根据交易id获取获取通知数据
+                    // 根据交易id获取通知数据
                     case "getNotifyByTxid":
                         result = commonService.getNotifyByTxid(req.@params[0].ToString());
                         break;
-                    // 根据交易id获取获取执行结果
+                    // 根据交易id获取执行结果
                     case "getDumpInfoByTxid":
                         result = commonService.getDumpInfoByTxid(req.@params[0].ToString());
                         break;
-
                     // 根据地址获取交易id和提交时间
                     case "getTxCallContract":
                         result = commonService.getTxCallContract(req.@params[0].ToString());
@@ -102,10 +101,14 @@ namespace NEL_OnlineDebuger_API.Controllers
                     case "txCallContract":
                         result = commonService.txCallContract(req.@params[0].ToString(), req.@params[1].ToString());
                         break;
+                    // 
+                    case "sendrawtransaction":
+                        result = commonService.sendrawtransaction(req.@params[0].ToString());
+                        break;
 
                     // 根据哈希获取合约信息
-                    case "getContractInfoByHash":
-                        result = compileService.getContractInfoByHash(req.@params[0].ToString());
+                    case "getContractDeployInfoByHash":
+                        result = compileService.getContractDeployInfoByHash(req.@params[0].ToString());
                         break;
                     // 根据哈希获取合约文件
                     case "getContractCodeByHash":
@@ -116,7 +119,7 @@ namespace NEL_OnlineDebuger_API.Controllers
                         result = compileService.getContractRemarkByAddress(req.@params[0].ToString());
                         break;
                     // 3. 保存合约
-                    case "saveContract":
+                    case "storageContractFile":
                         result = compileService.saveContract(
                             req.@params[0].ToString(),
                             req.@params[1].ToString(),
@@ -139,7 +142,7 @@ namespace NEL_OnlineDebuger_API.Controllers
                         break;
 
                     // 2. 编译文件
-                    case "compile":
+                    case "compileContractFile":
                         result = compileService.compileFile(req.@params[0].ToString(), req.@params[1].ToString());
                         break;
                     // 查询是否可以申领Gas
@@ -156,6 +159,21 @@ namespace NEL_OnlineDebuger_API.Controllers
                         {
                             result = claimService.claimGas(req.@params[0].ToString(), Convert.ToDecimal(req.@params[1]));
                         }
+                        break;
+
+                    // 获取余额
+                    case "getUtxoBalance":
+                        if (req.@params.Length < 2)
+                        {
+                            result = commonService.getUtxoBalance(req.@params[0].ToString());
+                        } else
+                        {
+                            result = commonService.getUtxoBalance(req.@params[0].ToString(), req.@params[1].ToString());
+                        }
+                        break;
+                    // 获取区块时间
+                    case "getblocktime":
+                        result = commonService.getblocktime(int.Parse(req.@params[0].ToString()));
                         break;
                     // 获取区块高度
                     case "getblockcount":

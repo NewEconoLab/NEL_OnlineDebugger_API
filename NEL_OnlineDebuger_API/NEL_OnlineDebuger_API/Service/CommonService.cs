@@ -3,6 +3,7 @@ using NEL_Wallet_API.Controllers;
 using NEL_Wallet_API.lib;
 using Newtonsoft.Json.Linq;
 using System.IO;
+using System.Linq;
 
 namespace NEL_OnlineDebuger_API.Service
 {
@@ -53,6 +54,32 @@ namespace NEL_OnlineDebuger_API.Service
             return new JArray() { res };
         }
 
+        public JArray getUtxoBalance(string address, string assetid = "")
+        {
+            JObject findJo = new JObject() { { "addr", address },{ "used",""} };
+            if(assetid != null && assetid != "")
+            {
+                findJo.Add("assetid", assetid);
+            }
+            string findStr = findJo.ToString();
+            string fieldStr = new JObject() {{ "asset", 1 },{ "value", 1 } }.ToString();
+            var query = mh.GetDataWithField(block_mongodbConnStr, block_mongodbDatabase, "utxo", fieldStr, findStr);
+            var res = query.GroupBy(p => p["asset"].ToString(), (k, g) => {
+                return new JObject() {
+                    { "assetid", k.ToString()},
+                    {"balance", g.Sum(pg => decimal.Parse(pg["value"].ToString())) }
+                };
+            }).ToArray();
+            return new JArray { res };
+        }
+        public JArray getblocktime(int index)
+        {
+            string findStr = new JObject() { {"index", index} }.ToString();
+            string fieldStr = new JObject() { { "time", 1 } }.ToString();
+            var query = mh.GetDataWithField(block_mongodbConnStr, block_mongodbDatabase, "block", fieldStr, findStr);
+            if (query == null || query.Count == 0) return new JArray() { };
+            return new JArray { new JObject() { { "blocktime", query[0]["time"] } } };
+        }
         public JArray getblockcount()
         {
             long blockcount = long.Parse(mh.GetData(block_mongodbConnStr, block_mongodbDatabase, "system_counter", "{counter:'block'}")[0]["lastBlockindex"].ToString()) + 1;
