@@ -56,6 +56,7 @@ namespace NEL_OnlineDebuger_API.Service
         
         public JArray uploadContractFile(string address, string hash)
         {
+            hash = format(hash);
             // 保存合约文件
             string findStr = new JObject() { { "address", address},{"hash", hash }, { "state", "0" } }.ToString();
             var query = mh.GetData(notify_mongodbConnStr, notify_mongodbDatabase, compilefileCol, findStr);
@@ -76,6 +77,7 @@ namespace NEL_OnlineDebuger_API.Service
         }
         public JArray downloadCompileFile(string hash)
         {
+            hash = format(hash);
             // 获取合约文件
             string pathScript = "";
             string str_avm = ossClient.OssFileDownLoad(System.IO.Path.Combine(pathScript, hash + ".avm"));
@@ -145,6 +147,10 @@ namespace NEL_OnlineDebuger_API.Service
             return mh.GetData(notify_mongodbConnStr, notify_mongodbDatabase, deployfileCol, findStr);
         }
 
+        public string format(string txid)
+        {
+            return txid.StartsWith("0x") ? txid : "0x" + txid;
+        }
         
     }
 }

@@ -19,11 +19,13 @@ namespace NEL_OnlineDebuger_API.Service
         
         public JArray getNotifyByTxid(string txid)
         {
+            txid = format(txid);
             string findStr = new JObject() { { "txid", txid } }.ToString();
             return mh.GetData(block_mongodbConnStr, block_mongodbDatabase, "ApplicationLogs", findStr);
         }
         public JArray getDumpInfoByTxid(string txid)
         {
+            txid = format(txid);
             string findStr = new JObject() { {"txid",txid } }.ToString();
             return mh.GetData(block_mongodbConnStr, block_mongodbDatabase, "DumpInfos", findStr);
         }
@@ -59,7 +61,7 @@ namespace NEL_OnlineDebuger_API.Service
             JObject findJo = new JObject() { { "addr", address },{ "used",""} };
             if(assetid != null && assetid != "")
             {
-                findJo.Add("assetid", assetid);
+                findJo.Add("assetid", format(assetid));
             }
             string findStr = findJo.ToString();
             string fieldStr = new JObject() {{ "asset", 1 },{ "value", 1 } }.ToString();
@@ -138,6 +140,11 @@ namespace NEL_OnlineDebuger_API.Service
             JObject resultJ = (JObject)JObject.Parse(resp)["result"];
 
             return resultJ;
+        }
+
+        public string format(string txid)
+        {
+            return txid.StartsWith("0x") ? txid : "0x" + txid;
         }
     }
 }
