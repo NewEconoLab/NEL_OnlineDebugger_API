@@ -72,7 +72,7 @@ namespace NEL_OnlineDebuger_API.Service
                     if (c.Value.debugcode != null)
                     {
                         var debugcode = c.Value.debugcode.ToLower();
-                        if (debugcode.Contains(".cs"))
+                        //if (debugcode.Contains(".cs"))
                         {
                             infos.AddArrayValue(c.Value.addr.ToString("X04") + "-" + c.Value.debugline.ToString());
                         }
