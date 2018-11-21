@@ -53,7 +53,23 @@ namespace NEL_OnlineDebuger_API.Service
             }
             return new JArray(){ new JObject() { { "code", "0000"}, { "message", "编译成功"}, { "hash", hash } } };
         }
-        
+
+        public JArray getContractCodeByHash(string address, string hash)
+        {
+            // 未部署时从临时库获取
+            string findStr = new JObject() { { "address", address }, { "scripthash", hash } }.ToString();
+            if(mh.GetDataCount(notify_mongodbConnStr, notify_mongodbDatabase, deployfileCol, findStr) == 0)
+            {
+                findStr = new JObject() { { "addr", address }, { "hash", hash } }.ToString();
+                string fieldStr = MongoFieldHelper.toReturn(new string[] { "cs", "avm", "map", "abi" }).ToString();
+                var query = mh.GetDataWithField(notify_mongodbConnStr, notify_mongodbDatabase, compilefileCol, fieldStr, findStr);
+                return query;
+            }
+            // 部署后从oss获取
+            return downloadCompileFile(hash);
+        }
+
+
         public JArray uploadContractFile(string address, string hash)
         {
             hash = format(hash);

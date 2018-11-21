@@ -112,7 +112,7 @@ namespace NEL_OnlineDebuger_API.Controllers
                         break;
                     // 根据哈希获取合约文件
                     case "getContractCodeByHash":
-                        result = compileService.downloadCompileFile(req.@params[0].ToString());
+                        result = compileService.getContractCodeByHash(req.@params[0].ToString(), req.@params[1].ToString());
                         break;
                     // 根据地址获取合约摘要
                     case "getContractRemarkByAddress":
