@@ -12,6 +12,8 @@ namespace NEL_OnlineDebuger_API.Service
         public mongoHelper mh { set; get; }
         public string block_mongodbConnStr { get; set; }
         public string block_mongodbDatabase { get; set; }
+        public string newblock_mongodbConnStr { get; set; }
+        public string newblock_mongodbDatabase { get; set; }
         public string notify_mongodbConnStr { get; set; }
         public string notify_mongodbDatabase { get; set; }
         public string neoCliJsonRPCUrl { get; set; }
@@ -27,7 +29,8 @@ namespace NEL_OnlineDebuger_API.Service
         {
             txid = format(txid);
             string findStr = new JObject() { {"txid",txid } }.ToString();
-            return mh.GetData(block_mongodbConnStr, block_mongodbDatabase, "DumpInfos", findStr);
+            //return mh.GetData(block_mongodbConnStr, block_mongodbDatabase, "DumpInfos", findStr);
+            return mh.GetData(newblock_mongodbConnStr, newblock_mongodbDatabase, "dumpinfos", findStr);
         }
         public JArray getTxCallContract(string address)
         {

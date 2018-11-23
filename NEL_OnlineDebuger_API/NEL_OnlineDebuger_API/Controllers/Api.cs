@@ -37,6 +37,8 @@ namespace NEL_OnlineDebuger_API.Controllers
                         notify_mongodbConnStr = mh.notify_mongodbConnStr_testnet,
                         notify_mongodbDatabase = mh.notify_mongodbDatabase_testnet,
                         neoCliJsonRPCUrl = mh.neoCliJsonRPCUrl_testnet,
+                        newblock_mongodbConnStr = mh.newblock_mongodbConnStr_testnet,
+                        newblock_mongodbDatabase = mh.newblock_mongodbDatabase_testnet,
                     };
                     compileService = new CompileService
                     {
