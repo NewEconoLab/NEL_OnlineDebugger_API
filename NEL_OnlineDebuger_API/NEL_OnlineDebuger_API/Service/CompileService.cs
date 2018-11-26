@@ -42,7 +42,7 @@ namespace NEL_OnlineDebuger_API.Service
                     { "hash", hash},
                     { "state", "0" }, // 
                     { "cs",filetext },
-                    { "avm", avmtext},
+                    { "avm", avmtext.ToHexString()},
                     { "abi", abitext},
                     { "map", maptext },
                     { "error", "" },
