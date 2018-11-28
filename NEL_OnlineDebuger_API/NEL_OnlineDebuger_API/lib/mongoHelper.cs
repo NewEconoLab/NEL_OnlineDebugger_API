@@ -11,9 +11,6 @@ namespace NEL_OnlineDebuger_API.lib
 {
     public class mongoHelper
     {
-        public string newblock_mongodbConnStr_testnet = string.Empty;
-        public string newblock_mongodbDatabase_testnet = string.Empty;
-
         public string block_mongodbConnStr_testnet = string.Empty;
         public string block_mongodbDatabase_testnet = string.Empty;
         public string analy_mongodbConnStr_testnet = string.Empty;
@@ -43,10 +40,7 @@ namespace NEL_OnlineDebuger_API.lib
                 .SetBasePath(System.IO.Directory.GetCurrentDirectory())   //指定配置文件所在的目录
                 .AddJsonFile("mongodbsettings.json", optional: true, reloadOnChange: true)  //指定加载的配置文件
                 .Build();    //编译成对象  
-
-
-            newblock_mongodbConnStr_testnet = config["newblock_mongodbConnStr_testnet"];
-            newblock_mongodbDatabase_testnet = config["newblock_mongodbDatabase_testnet"];
+            
             block_mongodbConnStr_testnet = config["block_mongodbConnStr_testnet"];
             block_mongodbDatabase_testnet = config["block_mongodbDatabase_testnet"];
             analy_mongodbConnStr_testnet = config["analy_mongodbConnStr_testnet"];

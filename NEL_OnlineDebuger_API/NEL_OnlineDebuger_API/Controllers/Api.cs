@@ -39,8 +39,6 @@ namespace NEL_OnlineDebuger_API.Controllers
                         notify_mongodbConnStr = mh.notify_mongodbConnStr_testnet,
                         notify_mongodbDatabase = mh.notify_mongodbDatabase_testnet,
                         neoCliJsonRPCUrl = mh.neoCliJsonRPCUrl_testnet,
-                        newblock_mongodbConnStr = mh.newblock_mongodbConnStr_testnet,
-                        newblock_mongodbDatabase = mh.newblock_mongodbDatabase_testnet,
                         debug_mongodbConnStr = mh.debug_mongodbConnStr_testnet,
                         debug_mongodbDatabase = mh.debug_mongodbDatabase_testnet,
                     };
@@ -84,7 +82,7 @@ namespace NEL_OnlineDebuger_API.Controllers
                         checkTxInterval = int.Parse(mh.checkTxInterval_testnet),
                         checkTxCount = int.Parse(mh.checkTxCount_testnet)
                     };
-                    // 暂时放在这里，后续考虑单独整出来
+                    // 
                     new Task(() => claimTx4testnet.claimGasLoop()).Start();
                     break;
                 case "mainnet":
@@ -246,7 +244,7 @@ namespace NEL_OnlineDebuger_API.Controllers
                         result = compileServiceNew.getContractRemarkByAddress(req.@params[0].ToString());
                         break;
                     // 3. 保存合约
-                    case "storageContractFile_New":
+                    case "storageContractFile":
                         result = compileServiceNew.saveContract(
                             req.@params[0].ToString(),
                             req.@params[1].ToString(),

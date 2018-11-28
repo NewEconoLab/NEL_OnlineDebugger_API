@@ -12,8 +12,6 @@ namespace NEL_OnlineDebuger_API.Service
         public mongoHelper mh { set; get; }
         public string block_mongodbConnStr { get; set; }
         public string block_mongodbDatabase { get; set; }
-        public string newblock_mongodbConnStr { get; set; }
-        public string newblock_mongodbDatabase { get; set; }
         public string notify_mongodbConnStr { get; set; }
         public string notify_mongodbDatabase { get; set; }
         public string debug_mongodbConnStr { get; set; }
@@ -31,14 +29,12 @@ namespace NEL_OnlineDebuger_API.Service
         {
             txid = format(txid);
             string findStr = new JObject() { {"txid",txid } }.ToString();
-            //return mh.GetData(block_mongodbConnStr, block_mongodbDatabase, "DumpInfos", findStr);
-            return mh.GetData(newblock_mongodbConnStr, newblock_mongodbDatabase, "dumpinfos", findStr);
+            return mh.GetData(block_mongodbConnStr, block_mongodbDatabase, "DumpInfos", findStr);
         }
         public JArray getTxCallContract(string address)
         {
             string findStr = new JObject() { {"address", address } }.ToString();
             string fieldStr = new JObject() { {"txid",1 },{ "createTime",1 }}.ToString();
-            //var res = mh.GetDataWithField(notify_mongodbConnStr, notify_mongodbDatabase, txCallContractCol, fieldStr, findStr);
             var res = mh.GetDataWithField(debug_mongodbConnStr, debug_mongodbDatabase, txCallContractCol, fieldStr, findStr);
             return res;
         }
@@ -58,7 +54,6 @@ namespace NEL_OnlineDebuger_API.Service
                 {"txid", txid },
                 {"createTime", nowtime }
             }.ToString();
-            //mh.InsertOneData(notify_mongodbConnStr, notify_mongodbDatabase, txCallContractCol, newdata);
             mh.InsertOneData(debug_mongodbConnStr, debug_mongodbDatabase, txCallContractCol, newdata);
             return new JArray() { res };
         }
