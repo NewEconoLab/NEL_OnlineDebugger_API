@@ -131,8 +131,12 @@ namespace NEL_OnlineDebuger_API.Service
                 {"createTime", nowtime },
                 {"lastUpdateTime", nowtime }
             }.ToString();
+            string findStr = new JObject() { {"address", address }, { "scripthash", scripthash} }.ToString();
+            if(mh.GetDataCount(debug_mongodbConnStr, debug_mongodbDatabase, deployfileCol, findStr) > 0)
+            {
+                return new JArray() { new JObject() { { "code", "0000" }, { "message", "重复保存" } } };
+            }
             mh.InsertOneData(debug_mongodbConnStr, debug_mongodbDatabase, deployfileCol, newdata);
-
             // 保存编译文件
             storeContractFile(scripthash);
             return new JArray() { new JObject() { { "code", "0000" }, { "message", "保存成功" } } };
