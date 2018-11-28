@@ -36,11 +36,12 @@ namespace NEL_OnlineDebuger_API
                .AddJsonFile("mongodbsettings.json", optional: true, reloadOnChange: true)  //指定加载的配置文件
                .Build();    //编译成对象        
 
-                serverPort = int.Parse(config["serverPort"].ToString());
+                serverPort = int.Parse(config["appPort"].ToString());
             }
             catch
             {
-                serverPort = 1189;
+                //serverPort = 1189;
+                serverPort = 88;
             }
 
             return serverPort;

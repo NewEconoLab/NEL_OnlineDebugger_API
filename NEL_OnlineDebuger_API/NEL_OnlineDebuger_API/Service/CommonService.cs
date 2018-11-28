@@ -16,6 +16,8 @@ namespace NEL_OnlineDebuger_API.Service
         public string newblock_mongodbDatabase { get; set; }
         public string notify_mongodbConnStr { get; set; }
         public string notify_mongodbDatabase { get; set; }
+        public string debug_mongodbConnStr { get; set; }
+        public string debug_mongodbDatabase { get; set; }
         public string neoCliJsonRPCUrl { get; set; }
         public string txCallContractCol { get; set; } = "onlineDebuger_txCallContract";
         
@@ -36,7 +38,8 @@ namespace NEL_OnlineDebuger_API.Service
         {
             string findStr = new JObject() { {"address", address } }.ToString();
             string fieldStr = new JObject() { {"txid",1 },{ "createTime",1 }}.ToString();
-            var res = mh.GetDataWithField(notify_mongodbConnStr, notify_mongodbDatabase, txCallContractCol, fieldStr, findStr);
+            //var res = mh.GetDataWithField(notify_mongodbConnStr, notify_mongodbDatabase, txCallContractCol, fieldStr, findStr);
+            var res = mh.GetDataWithField(debug_mongodbConnStr, debug_mongodbDatabase, txCallContractCol, fieldStr, findStr);
             return res;
         }
         public JArray txCallContract(string address, string txhex)
@@ -55,7 +58,8 @@ namespace NEL_OnlineDebuger_API.Service
                 {"txid", txid },
                 {"createTime", nowtime }
             }.ToString();
-            mh.InsertOneData(notify_mongodbConnStr, notify_mongodbDatabase, txCallContractCol, newdata);
+            //mh.InsertOneData(notify_mongodbConnStr, notify_mongodbDatabase, txCallContractCol, newdata);
+            mh.InsertOneData(debug_mongodbConnStr, debug_mongodbDatabase, txCallContractCol, newdata);
             return new JArray() { res };
         }
 

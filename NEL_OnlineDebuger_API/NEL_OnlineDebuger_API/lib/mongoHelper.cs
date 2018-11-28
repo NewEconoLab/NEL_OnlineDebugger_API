@@ -17,40 +17,24 @@ namespace NEL_OnlineDebuger_API.lib
         public string block_mongodbConnStr_testnet = string.Empty;
         public string block_mongodbDatabase_testnet = string.Empty;
         public string analy_mongodbConnStr_testnet = string.Empty;
-        public string analy_mongodbConnStrTestnet = string.Empty;
         public string analy_mongodbDatabase_testnet = string.Empty;
-        public string analy_mongodbDatabaseTestnet = string.Empty;
         public string notify_mongodbConnStr_testnet = string.Empty;
         public string notify_mongodbDatabase_testnet = string.Empty;
+        public string debug_mongodbConnStr_testnet = string.Empty;
+        public string debug_mongodbDatabase_testnet = string.Empty;
         public string neoCliJsonRPCUrl_testnet = string.Empty;
         public string nelJsonRPCUrl_testnet = string.Empty;
         public string nelOssRPCUrl_testnet = string.Empty;
-
-
-        public string block_mongodbConnStr_mainnet = string.Empty;
-        public string block_mongodbDatabase_mainnet = string.Empty;
-        public string analy_mongodbConnStr_mainnet = string.Empty;
-        public string analy_mongodbDatabase_mainnet = string.Empty;
-        public string notify_mongodbConnStr_mainnet = string.Empty;
-        public string notify_mongodbDatabase_mainnet = string.Empty;
-        public string neoCliJsonRPCUrl_mainnet = string.Empty;
-        public string nelJsonRPCUrl_mainnet = string.Empty;
-        public string nelOssRPCUrl_mainnet = string.Empty;
+        public string nelDebugRPCUrl_testnet = string.Empty;
         
         public string id_neo = string.Empty;
         public string id_gas = string.Empty;
         public string prikeywif_testnet = string.Empty;
-        public string prikeywif_mainnet = string.Empty;
         public string gasClaimCol_testnet = string.Empty;
-        public string gasClaimCol_mainnet = string.Empty;
         public string maxClaimAmount_testnet = string.Empty;
-        public string maxClaimAmount_mainnet = string.Empty;
         public string batchSendInterval_testnet = string.Empty;
-        public string batchSendInterval_mainnet = string.Empty;
         public string checkTxInterval_testnet = string.Empty;
-        public string checkTxInterval_mainnet = string.Empty;
         public string checkTxCount_testnet = string.Empty;
-        public string checkTxCount_mainnet = string.Empty;
         
 
         public mongoHelper() {
@@ -60,49 +44,32 @@ namespace NEL_OnlineDebuger_API.lib
                 .AddJsonFile("mongodbsettings.json", optional: true, reloadOnChange: true)  //指定加载的配置文件
                 .Build();    //编译成对象  
 
+
             newblock_mongodbConnStr_testnet = config["newblock_mongodbConnStr_testnet"];
             newblock_mongodbDatabase_testnet = config["newblock_mongodbDatabase_testnet"];
             block_mongodbConnStr_testnet = config["block_mongodbConnStr_testnet"];
             block_mongodbDatabase_testnet = config["block_mongodbDatabase_testnet"];
             analy_mongodbConnStr_testnet = config["analy_mongodbConnStr_testnet"];
             analy_mongodbDatabase_testnet = config["analy_mongodbDatabase_testnet"];
-            analy_mongodbConnStrTestnet = config["analy_mongodbConnStrTestnet"];
-            analy_mongodbDatabaseTestnet = config["analy_mongodbDatabaseTestnet"];
             notify_mongodbConnStr_testnet = config["notify_mongodbConnStr_testnet"];
             notify_mongodbDatabase_testnet = config["notify_mongodbDatabase_testnet"];
+            debug_mongodbConnStr_testnet = config["debug_mongodbConnStr_testnet"];
+            debug_mongodbDatabase_testnet = config["debug_mongodbDatabase_testnet"];
             neoCliJsonRPCUrl_testnet = config["neoCliJsonRPCUrl_testnet"];
             nelJsonRPCUrl_testnet = config["nelJsonRPCUrl_testnet"];
             nelOssRPCUrl_testnet = config["nelOssRPCUrl_testnet"];
-
-            block_mongodbConnStr_mainnet = config["block_mongodbConnStr_mainnet"];
-            block_mongodbDatabase_mainnet = config["block_mongodbDatabase_mainnet"];
-            analy_mongodbConnStr_mainnet = config["analy_mongodbConnStr_mainnet"];
-            analy_mongodbDatabase_mainnet = config["analy_mongodbDatabase_mainnet"];
-            notify_mongodbConnStr_mainnet = config["notify_mongodbConnStr_mainnet"];
-            notify_mongodbDatabase_mainnet = config["notify_mongodbDatabase_mainnet"];
-            neoCliJsonRPCUrl_mainnet = config["neoCliJsonRPCUrl_mainnet"];
-            nelJsonRPCUrl_mainnet = config["nelJsonRPCUrl_mainnet"];
-            nelOssRPCUrl_mainnet = config["nelOssRPCUrl_mainnet"];
+            nelDebugRPCUrl_testnet = config["nelDebugRPCUrl_testnet"];
             
 
             id_neo = config["id_neo"];
             id_gas = config["id_gas"];
             prikeywif_testnet = config["prikeywif_testnet"];
-            prikeywif_mainnet = config["prikeywif_mainnet"];
             gasClaimCol_testnet = config["gasClaimCol_testnet"];
-            gasClaimCol_mainnet = config["gasClaimCol_mainnet"];
             maxClaimAmount_testnet = config["maxClaimAmount_testnet"];
-            maxClaimAmount_mainnet = config["maxClaimAmount_mainnet"];
             batchSendInterval_testnet = config["batchSendInterval_testnet"];
-            batchSendInterval_mainnet = config["batchSendInterval_mainnet"];
             checkTxInterval_testnet = config["checkTxInterval_testnet"];
-            checkTxInterval_mainnet = config["checkTxInterval_mainnet"];
             checkTxCount_testnet = config["checkTxCount_testnet"];
-            checkTxCount_mainnet = config["checkTxCount_mainnet"];
-
-
-
-
+            
         }
 
         public JArray GetData(string mongodbConnStr,string mongodbDatabase, string coll, string findBson)

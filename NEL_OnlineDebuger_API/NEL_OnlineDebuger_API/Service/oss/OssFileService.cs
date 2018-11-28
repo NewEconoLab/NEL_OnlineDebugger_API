@@ -7,6 +7,7 @@ namespace NEL_Wallet_API.Controllers
         private string serviceUrl = "http://localhost:52083/api/testnet";
         private string uploadPath = "oss/upload";
         private string downloadPath = "oss/download";
+        private string storePath = "oss/store";
 
         public OssFileService(string url)
         {
@@ -30,6 +31,16 @@ namespace NEL_Wallet_API.Controllers
             string data = req.ToString();
             OssRes res = getRes(RestHelper.RestPost(serviceUrl + downloadPath, data));
             return res.data ;
+        }
+
+        public string OssFileStore(string fileName)
+        {
+            //string data = "{'fileName':'" + fileName + "'}";
+            MyJson.JsonNode_Object req = new MyJson.JsonNode_Object();
+            req.Add("fileName", new MyJson.JsonNode_ValueString(fileName));
+            string data = req.ToString();
+            OssRes res = getRes(RestHelper.RestPost(serviceUrl + storePath, data));
+            return res.data;
         }
 
         private OssRes getRes(string resp)
