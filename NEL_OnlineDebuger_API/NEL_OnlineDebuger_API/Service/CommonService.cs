@@ -23,13 +23,15 @@ namespace NEL_OnlineDebuger_API.Service
         {
             txid = format(txid);
             string findStr = new JObject() { { "txid", txid } }.ToString();
-            return mh.GetData(block_mongodbConnStr, block_mongodbDatabase, "ApplicationLogs", findStr);
+            //return mh.GetData(block_mongodbConnStr, block_mongodbDatabase, "ApplicationLogs", findStr);
+            return mh.GetData(block_mongodbConnStr, block_mongodbDatabase, "notify", findStr);
         }
         public JArray getDumpInfoByTxid(string txid)
         {
             txid = format(txid);
             string findStr = new JObject() { {"txid",txid } }.ToString();
-            return mh.GetData(block_mongodbConnStr, block_mongodbDatabase, "DumpInfos", findStr);
+            //return mh.GetData(block_mongodbConnStr, block_mongodbDatabase, "DumpInfos", findStr);
+            return mh.GetData(block_mongodbConnStr, block_mongodbDatabase, "dumpinfos", findStr);
         }
         public JArray getTxCallContract(string address)
         {
