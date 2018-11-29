@@ -41,13 +41,19 @@ namespace NEL_OnlineDebuger_API.Service
             string maptext = null;
             */
             string hash = null;
+            string code = null;
+            string message = null;
             bool flag = false;
             try
             {
-                flag = debugger.compileFile(null, filetext, /*out avmtext, out abitext, out maptext,*/ out hash);
+                flag = debugger.compileFile(null, filetext, /*out avmtext, out abitext, out maptext,*/ out hash, out code, out message);
             } catch (Exception ex)
             {
                 return new JArray() { new JObject() { { "code", "1001" }, { "message", "编译失败,失败提示:"+ex.Message }, { "hash", hash } } };
+            }
+            if(!flag)
+            {
+                return new JArray() { new JObject() { { "code", "1001" }, { "message", "编译失败,失败提示:" + message }, { "hash", hash } } };
             }
             return new JArray(){ new JObject() { { "code", "0000"}, { "message", "编译成功"}, { "hash", hash } } };
         }
