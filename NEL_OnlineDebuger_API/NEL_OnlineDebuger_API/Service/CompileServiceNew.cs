@@ -47,7 +47,7 @@ namespace NEL_OnlineDebuger_API.Service
                 flag = debugger.compileFile(null, filetext, /*out avmtext, out abitext, out maptext,*/ out hash);
             } catch (Exception ex)
             {
-                return new JArray() { new JObject() { { "code", "1001" }, { "message", ex.Message }, { "result", new JObject() { { "hash", hash } } } } };
+                return new JArray() { new JObject() { { "code", "1001" }, { "message", "编译失败,失败提示:"+ex.Message }, { "hash", hash } } };
             }
             return new JArray(){ new JObject() { { "code", "0000"}, { "message", "编译成功"}, { "hash", hash } } };
         }
