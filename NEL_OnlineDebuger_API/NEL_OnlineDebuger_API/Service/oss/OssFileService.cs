@@ -45,13 +45,22 @@ namespace NEL_Wallet_API.Controllers
 
         private OssRes getRes(string resp)
         {
+            Newtonsoft.Json.Linq.JObject res = Newtonsoft.Json.Linq.JObject.Parse(resp);
+            return new OssRes
+            {
+                code = res["code"].ToString(),
+                errMsg = res["errMsg"].ToString(),
+                data = res["data"].ToString()
+            };
+
+            /*
             MyJson.IJsonNode res = MyJson.Parse(resp);
             return new OssRes
             {
                 code = res.Get("code").AsString(),
                 errMsg = res.Get("errMsg").AsString(),
                 data = res.Get("data").AsString()
-            };
+            };*/
         }
 
         private class OssRes
