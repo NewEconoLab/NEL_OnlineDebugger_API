@@ -33,11 +33,12 @@ namespace NEL_OnlineDebuger_API.Service
             //return mh.GetData(block_mongodbConnStr, block_mongodbDatabase, "DumpInfos", findStr);
             return mh.GetData(block_mongodbConnStr, block_mongodbDatabase, "dumpinfos", findStr);
         }
-        public JArray getTxCallContract(string address)
+        public JArray getTxCallContract(string address, int pageNum=1, int pageSize=20)
         {
             string findStr = new JObject() { {"address", address } }.ToString();
             string fieldStr = new JObject() { {"txid",1 },{ "createTime",1 }}.ToString();
-            var res = mh.GetDataWithField(debug_mongodbConnStr, debug_mongodbDatabase, txCallContractCol, fieldStr, findStr);
+            string sortStr = new JObject() { { "createTime", -1 } }.ToString();
+            var res = mh.GetDataPagesWithField(debug_mongodbConnStr, debug_mongodbDatabase, txCallContractCol, fieldStr, pageSize, pageNum, sortStr, findStr);
             return res;
         }
         public JArray txCallContract(string address, string txhex)

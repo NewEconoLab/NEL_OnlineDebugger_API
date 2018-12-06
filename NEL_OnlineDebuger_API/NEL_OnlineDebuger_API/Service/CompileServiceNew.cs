@@ -148,11 +148,12 @@ namespace NEL_OnlineDebuger_API.Service
             return new JArray() { new JObject() { { "code", "0000" }, { "message", "保存成功" } } };
         }
 
-        public JArray getContractRemarkByAddress(string address)
+        public JArray getContractRemarkByAddress(string address, int pageNum = 1, int pageSize = 20)
         {
             string findStr = new JObject() { {"address", address } }.ToString();
             string fieldStr = MongoFieldHelper.toReturn(new string[] {"scripthash", "name" }).ToString();
-            return mh.GetDataWithField(debug_mongodbConnStr, debug_mongodbDatabase, deployfileCol, fieldStr, findStr);
+            string sortStr = new JObject() { {"createTime", -1 } }.ToString();
+            return mh.GetDataPagesWithField(debug_mongodbConnStr, debug_mongodbDatabase, deployfileCol, fieldStr, pageSize, pageNum, sortStr, findStr);
         }
         public JArray getContractDeployInfoByHash(string scripthash)
         {
