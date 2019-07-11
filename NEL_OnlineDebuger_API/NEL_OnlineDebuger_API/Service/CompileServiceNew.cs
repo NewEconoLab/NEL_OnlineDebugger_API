@@ -65,7 +65,6 @@ namespace NEL_OnlineDebuger_API.Service
         {
             string hash = null;
             string message = null;
-            bool flag = false;
             try
             {
                 //加入一个随机数
@@ -134,10 +133,6 @@ namespace NEL_OnlineDebuger_API.Service
             catch (Exception ex)
             {
                 return new JArray() { new JObject() { { "code", "1001" }, { "message", "编译失败,失败提示:" + ex.Message }, { "hash", hash } } };
-            }
-            if (!flag)
-            {
-                return new JArray() { new JObject() { { "code", "1001" }, { "message", "编译失败,失败提示:" + message }, { "hash", hash } } };
             }
             return new JArray() { new JObject() { { "code", "0000" }, { "message", "编译成功" }, { "hash", hash } } };
         }
