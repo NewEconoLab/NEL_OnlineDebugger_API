@@ -55,7 +55,8 @@ namespace NEL_OnlineDebuger_API.Controllers
                         debug_mongodbConnStr = mh.debug_mongodbConnStr_testnet,
                         debug_mongodbDatabase = mh.debug_mongodbDatabase_testnet,
                         ossClient = new OssFileService(mh.nelOssRPCUrl_testnet),
-                        debugger = new CompileFileService(mh.nelDebugRPCUrl_testnet)
+                        debugger = new CompileFileService(mh.nelDebugRPCUrl_testnet),
+                        py_path = mh.py_path
                     };
                     claimService = new ClaimGasService
                     {
@@ -262,6 +263,9 @@ namespace NEL_OnlineDebuger_API.Controllers
                     // 2. 编译文件
                     case "compileContractFile":
                         result = compileServiceNew.compileFile(req.@params[0].ToString(), req.@params[1].ToString());
+                        break;
+                    case "compilePythonContractFile":
+                    result = compileServiceNew.compilePythonFile(req.@params[0].ToString(),req.@params[1].ToString());
                         break;
                 }
             return result;

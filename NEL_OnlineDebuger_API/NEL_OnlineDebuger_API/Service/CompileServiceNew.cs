@@ -4,6 +4,8 @@ using NEL_Wallet_API.Controllers;
 using NEL_Wallet_API.lib;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Numerics;
+using System.Security.Cryptography;
 
 namespace NEL_OnlineDebuger_API.Service
 {
@@ -31,6 +33,7 @@ namespace NEL_OnlineDebuger_API.Service
         public string deployfileCol { get; set; } = "onlineDebuger_deployfile";
         public OssFileService ossClient { get; set; }
         public CompileFileService debugger { get; set; }
+        public string py_path { get; set; }
 
         public JArray compileFile(string address, string filetext)
         {
@@ -56,6 +59,87 @@ namespace NEL_OnlineDebuger_API.Service
                 return new JArray() { new JObject() { { "code", "1001" }, { "message", "编译失败,失败提示:" + message }, { "hash", hash } } };
             }
             return new JArray(){ new JObject() { { "code", "0000"}, { "message", "编译成功"}, { "hash", hash } } };
+        }
+
+        public JArray compilePythonFile(string address, string filetext)
+        {
+            string hash = null;
+            string message = null;
+            bool flag = false;
+            try
+            {
+                //加入一个随机数
+                byte[] randombytes = new byte[10];
+                using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+                {
+                    rng.GetBytes(randombytes);
+                }
+                BigInteger randomNum = new BigInteger(randombytes);
+                string tag = address + randomNum;
+                //创建合约文件
+                string contractFileName = string.Format("{0}/{1}.py",py_path, tag);
+                System.IO.File.WriteAllText(contractFileName,filetext);
+                //创建启动编译合约的文件
+                string runpy = string.Format("from boa.compiler import Compiler\nCompiler.load_and_save('{0}')", contractFileName);
+                string runFileName = string.Format("{0}/{1}_run.py",py_path, tag);
+                System.IO.File.WriteAllText(runFileName, runpy);
+                //执行编译
+                System.Diagnostics.ProcessStartInfo info = new System.Diagnostics.ProcessStartInfo();
+                info.WorkingDirectory = py_path;
+                info.FileName = "python3";
+                info.Arguments = runFileName;
+                info.CreateNoWindow = true;
+                info.RedirectStandardOutput = true;
+                info.RedirectStandardError = true;
+                info.RedirectStandardInput = true;
+                info.UseShellExecute = false;
+                System.Diagnostics.Process proces = System.Diagnostics.Process.Start(info);
+                proces.WaitForExit();
+                string outstr = proces.StandardOutput.ReadToEnd();
+                string avmFileName = string.Format("{0}/{1}.avm", py_path, tag);
+                string debugFileName = string.Format("{0}/{1}.debug.json", py_path, tag);
+                string str_avm = string.Empty;
+                string str_abi = string.Empty;
+                string str_map = string.Empty;
+                if (System.IO.File.Exists(avmFileName))
+                {
+                    byte[] avm = System.IO.File.ReadAllBytes(avmFileName);
+                    str_avm = ThinNeo.Helper.Bytes2HexString(avm);
+                }
+                else
+                {
+                    return new JArray() { new JObject() { { "code", "1001" }, { "message", "编译失败,失败提示:没有生成对应的avm文件" }, { "hash", hash } } };
+                }
+                if (System.IO.File.Exists(debugFileName))
+                {
+                    str_map = System.IO.File.ReadAllText(debugFileName);
+                    hash = MyJson.Parse(str_map).AsDict()["avm"].AsDict()["hash"].AsString();
+                }
+                else
+                {
+                    return new JArray() { new JObject() { { "code", "1001" }, { "message", "编译失败,失败提示:没有生成对应的avm文件" }, { "hash", hash } } };
+                }
+                //生成的文件上传到oss
+                ossClient.OssFileUpload(string.Format("{0}.py", hash), filetext);
+                ossClient.OssFileUpload(string.Format("{0}.avm", hash), str_avm);
+                ossClient.OssFileUpload(string.Format("{0}.abi.json", hash), str_abi);
+                ossClient.OssFileUpload(string.Format("{0}.map.json", hash), str_map);
+
+                //把生成的文件删除
+                System.IO.File.Delete(contractFileName);
+                System.IO.File.Delete(runFileName);
+                System.IO.File.Delete(avmFileName);
+                System.IO.File.Delete(debugFileName);
+            }
+            catch (Exception ex)
+            {
+                return new JArray() { new JObject() { { "code", "1001" }, { "message", "编译失败,失败提示:" + ex.Message }, { "hash", hash } } };
+            }
+            if (!flag)
+            {
+                return new JArray() { new JObject() { { "code", "1001" }, { "message", "编译失败,失败提示:" + message }, { "hash", hash } } };
+            }
+            return new JArray() { new JObject() { { "code", "0000" }, { "message", "编译成功" }, { "hash", hash } } };
         }
 
         public JArray getContractCodeByHash(string address, string hash, string type=".all")

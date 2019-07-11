@@ -32,6 +32,7 @@ namespace NEL_OnlineDebuger_API.lib
         public string batchSendInterval_testnet = string.Empty;
         public string checkTxInterval_testnet = string.Empty;
         public string checkTxCount_testnet = string.Empty;
+        public string py_path = string.Empty;
         
 
         public mongoHelper() {
@@ -63,7 +64,7 @@ namespace NEL_OnlineDebuger_API.lib
             batchSendInterval_testnet = config["batchSendInterval_testnet"];
             checkTxInterval_testnet = config["checkTxInterval_testnet"];
             checkTxCount_testnet = config["checkTxCount_testnet"];
-            
+            py_path = config["py_path"];
         }
 
         public JArray GetData(string mongodbConnStr,string mongodbDatabase, string coll, string findBson)

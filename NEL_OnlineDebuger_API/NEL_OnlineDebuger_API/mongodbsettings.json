@@ -1,0 +1,35 @@
+{
+  "block_mongodbConnStr_testnet": "mongodb://nelDataStorage:NELqingmingzi1128@dds-bp1df57f935202e41.mongodb.rds.aliyuncs.
+com:3717,dds-bp1df57f935202e42.mongodb.rds.aliyuncs.com:3717/NeoBlockBaseData_New?replicaSet=mgset-10445701",
+  "block_mongodbDatabase_testnet": "NeoBlockBaseData_New",
+  "analy_mongodbConnStr_testnet": "mongodb://analysisDataStorage:NELqingmingzi1128ADt@dds-bp1df57f935202e41.mongodb.rds.a
+liyuncs.com:3717,dds-bp1df57f935202e42.mongodb.rds.aliyuncs.com:3717/NeoAnalysisData_New?replicaSet=mgset-10445701",
+  "analy_mongodbDatabase_testnet": "NeoAnalysisData_New",
+  "notify_mongodbConnStr_testnet": "mongodb://notifyDataStorage:NELqingmingzi1128NDt@dds-bp1df57f935202e41.mongodb.rds.al
+iyuncs.com:3717,dds-bp1df57f935202e42.mongodb.rds.aliyuncs.com:3717/contractNotifyInfo_New?replicaSet=mgset-10445701",
+  "notify_mongodbDatabase_testnet": "contractNotifyInfo_New",
+  "debug_mongodbConnStr_testnet": "mongodb://onlineDebugDataStorage:NELqingmingzi1128ODBt@dds-bp1df57f935202e41.mongodb.r
+ds.aliyuncs.com:3717,dds-bp1df57f935202e42.mongodb.rds.aliyuncs.com:3717/onlineDebugData?replicaSet=mgset-10445701",
+  "debug_mongodbDatabase_testnet": "onlineDebugData",
+  //"neoCliJsonRPCUrl_testnet": "http://47.98.32.45:20332",
+  "neoCliJsonRPCUrl_testnet": "http://172.16.1.142:20332",
+  "nelJsonRPCUrl_testnet": "https://api.nel.group/api/testnet",
+  "nelOssRPCUrl_testnet": "http://localhost:84/api/testnet/",
+  "nelDebugRPCUrl_testnet": "http://localhost:87/api/testnet",
+  "py_path":"D:/_______COZ/neo-boa",
+
+  "id_gas": "0x602c79718b16e442de58778e148d0b1084e3b2dffd5de6b7b16cee7969282de7",
+  "id_neo": "0xc56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b",
+  "prikeywif_testnet": "KwQgbDkmYrjFYHFQX88Lvj9PosEmwozkrrWRmke7fsLcnKdZF965",
+  //"prikeywif_testnet": "L4CB1LrCPswv9nEi78fUes69cy2Ay2CyEEBarT8TVqLKoE31y2Xb",
+  "gasClaimCol_testnet": "onlineDebuger_gasClaimCol",
+  "maxClaimAmount_testnet": "510",
+
+  "batchSendInterval_testnet": 1,
+  "checkTxInterval_testnet": 2000,
+  "checkTxCount_testnet": 2,
+
+
+  "test": "test"
+
+}
