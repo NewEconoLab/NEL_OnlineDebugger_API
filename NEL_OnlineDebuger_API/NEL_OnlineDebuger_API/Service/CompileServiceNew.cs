@@ -104,6 +104,7 @@ namespace NEL_OnlineDebuger_API.Service
                 {
                     byte[] avm = System.IO.File.ReadAllBytes(avmFileName);
                     hash = ThinNeo.Helper.Bytes2HexString(((byte[])ThinNeo.Helper.GetScriptHashFromScript(avm)).Reverse().ToArray());
+                    hash = format(hash);
                     str_avm = ThinNeo.Helper.Bytes2HexString(avm);
                 }
                 else
