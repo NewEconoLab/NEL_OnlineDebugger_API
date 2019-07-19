@@ -4,6 +4,7 @@ using NEL_Wallet_API.Controllers;
 using NEL_Wallet_API.lib;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Linq;
 using System.Numerics;
 using System.Security.Cryptography;
 
@@ -64,7 +65,6 @@ namespace NEL_OnlineDebuger_API.Service
         public JArray compilePythonFile(string address, string filetext)
         {
             string hash = null;
-            string message = null;
             try
             {
                 //加入一个随机数
@@ -103,6 +103,7 @@ namespace NEL_OnlineDebuger_API.Service
                 if (System.IO.File.Exists(avmFileName))
                 {
                     byte[] avm = System.IO.File.ReadAllBytes(avmFileName);
+                    hash = ThinNeo.Helper.Bytes2HexString(((byte[])ThinNeo.Helper.GetScriptHashFromScript(avm)).Reverse().ToArray());
                     str_avm = ThinNeo.Helper.Bytes2HexString(avm);
                 }
                 else
@@ -112,7 +113,6 @@ namespace NEL_OnlineDebuger_API.Service
                 if (System.IO.File.Exists(debugFileName))
                 {
                     str_map = System.IO.File.ReadAllText(debugFileName);
-                    hash = MyJson.Parse(str_map).AsDict()["avm"].AsDict()["hash"].AsString();
                 }
                 else
                 {
