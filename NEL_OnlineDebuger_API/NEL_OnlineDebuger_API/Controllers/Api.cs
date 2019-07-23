@@ -257,7 +257,8 @@ namespace NEL_OnlineDebuger_API.Controllers
                             req.@params[7].ToString(),
                             req.@params[8].ToString(),
                             req.@params[9].ToString(),
-                            req.@params[10].ToString()
+                            req.@params[10].ToString(),
+                            req.@params[11].ToString()
                             );
                         break;
                     // 2. 编译文件

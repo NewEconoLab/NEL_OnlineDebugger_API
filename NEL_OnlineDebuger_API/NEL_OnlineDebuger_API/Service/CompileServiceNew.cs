@@ -193,15 +193,18 @@ namespace NEL_OnlineDebuger_API.Service
             JO_result["abi"] = JO_abi?.ToString();
             return new JArray() { JO_result };
         }
-        public void storeContractFile(string hash)
+        public void storeContractFile(string hash,string type)
         {
-            ossClient.OssFileStore(hash + ".cs");
+            if(type == "1")//py
+                ossClient.OssFileStore(hash + ".py");
+            else
+                ossClient.OssFileStore(hash + ".cs");
             ossClient.OssFileStore(hash + ".avm");
             ossClient.OssFileStore(hash + ".abi.json");
             ossClient.OssFileStore(hash + ".map.json");
         }
         
-        public JArray saveContract(string address, string scripthash, string name, string version, string author, string email, string desc, string acceptablePayment, string createStorage, string dynamicCall, string txid)
+        public JArray saveContract(string address, string scripthash, string name, string version, string author, string email, string desc, string acceptablePayment, string createStorage, string dynamicCall, string txid,string type)
         {
             //address + hash + name + version + author + email + desc + 可接受付款 + 创建存储区 + 动态调用 + txid
             scripthash = format(scripthash);
@@ -230,7 +233,7 @@ namespace NEL_OnlineDebuger_API.Service
             }
             mh.InsertOneData(debug_mongodbConnStr, debug_mongodbDatabase, deployfileCol, newdata);
             // 保存编译文件
-            storeContractFile(scripthash);
+            storeContractFile(scripthash, type);
             return new JArray() { new JObject() { { "code", "0000" }, { "message", "保存成功" } } };
         }
 
