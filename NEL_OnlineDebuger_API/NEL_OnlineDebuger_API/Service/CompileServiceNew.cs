@@ -96,7 +96,8 @@ namespace NEL_OnlineDebuger_API.Service
                 proces.WaitForExit();
                 string outstr = proces.StandardOutput.ReadToEnd();
                 string avmFileName = string.Format("{0}/{1}.avm", py_path, tag);
-                string debugFileName = string.Format("{0}/{1}.debug.json", py_path, tag);
+                string mapFileName = string.Format("{0}/{1}.map.json", py_path, tag);
+                string abiFileName = string.Format("{0}/{1}.abi.json", py_path, tag);
                 string str_avm = string.Empty;
                 string str_abi = string.Empty;
                 string str_map = string.Empty;
@@ -111,9 +112,13 @@ namespace NEL_OnlineDebuger_API.Service
                 {
                     return new JArray() { new JObject() { { "code", "1001" }, { "message", "编译失败,失败提示:没有生成对应的avm文件" }, { "hash", hash } } };
                 }
-                if (System.IO.File.Exists(debugFileName))
+                if (System.IO.File.Exists(mapFileName))
                 {
-                    str_map = System.IO.File.ReadAllText(debugFileName);
+                    str_map = System.IO.File.ReadAllText(mapFileName);
+                }
+                if (System.IO.File.Exists(abiFileName))
+                {
+                    str_abi = System.IO.File.ReadAllText(abiFileName);
                 }
                 else
                 {
@@ -122,14 +127,15 @@ namespace NEL_OnlineDebuger_API.Service
                 //生成的文件上传到oss
                 ossClient.OssFileUpload(string.Format("{0}.py", hash), filetext);
                 ossClient.OssFileUpload(string.Format("{0}.avm", hash), str_avm);
-                ossClient.OssFileUpload(string.Format("{0}.abi.json", hash), str_abi ?? str_map);
+                ossClient.OssFileUpload(string.Format("{0}.abi.json", hash), str_abi);
                 ossClient.OssFileUpload(string.Format("{0}.map.json", hash), str_map);
 
                 //把生成的文件删除
                 System.IO.File.Delete(contractFileName);
                 System.IO.File.Delete(runFileName);
                 System.IO.File.Delete(avmFileName);
-                System.IO.File.Delete(debugFileName);
+                System.IO.File.Delete(mapFileName);
+                System.IO.File.Delete(abiFileName);
             }
             catch (Exception ex)
             {
