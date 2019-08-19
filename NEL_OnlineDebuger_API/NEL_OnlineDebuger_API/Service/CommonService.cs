@@ -41,6 +41,21 @@ namespace NEL_OnlineDebuger_API.Service
             var res = mh.GetDataPagesWithField(debug_mongodbConnStr, debug_mongodbDatabase, txCallContractCol, fieldStr, pageSize, pageNum, sortStr, findStr);
             return res;
         }
+        public JArray saveTeemoTx(string address, string txid)
+        {
+            string findStr = new JObject { { "txid", txid } }.ToString();
+            if(mh.GetDataCount(debug_mongodbConnStr, debug_mongodbDatabase, txCallContractCol, findStr) > 0)
+            {
+                return new JArray { new JObject { {"res",false} } };
+            }
+            string newdata = new JObject() {
+                {"address", address },
+                {"txid", txid },
+                {"createTime", TimeHelper.GetTimeStamp() }
+            }.ToString();
+            mh.InsertOneData(debug_mongodbConnStr, debug_mongodbDatabase, txCallContractCol, newdata);
+            return new JArray { new JObject { { "res", true } } };
+        }
         public JArray txCallContract(string address, string txhex)
         {
             var res = sendrawtransaction(neoCliJsonRPCUrl, txhex);

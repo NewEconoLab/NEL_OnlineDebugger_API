@@ -4,6 +4,9 @@ using NEL_Wallet_API.Controllers;
 using NEL_Wallet_API.lib;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Linq;
+using System.Numerics;
+using System.Security.Cryptography;
 
 namespace NEL_OnlineDebuger_API.Service
 {
@@ -31,6 +34,7 @@ namespace NEL_OnlineDebuger_API.Service
         public string deployfileCol { get; set; } = "onlineDebuger_deployfile";
         public OssFileService ossClient { get; set; }
         public CompileFileService debugger { get; set; }
+        public string py_path { get; set; }
 
         public JArray compileFile(string address, string filetext)
         {
@@ -56,6 +60,88 @@ namespace NEL_OnlineDebuger_API.Service
                 return new JArray() { new JObject() { { "code", "1001" }, { "message", "编译失败,失败提示:" + message }, { "hash", hash } } };
             }
             return new JArray(){ new JObject() { { "code", "0000"}, { "message", "编译成功"}, { "hash", hash } } };
+        }
+
+        public JArray compilePythonFile(string address, string filetext)
+        {
+            string hash = null;
+            try
+            {
+                //加入一个随机数
+                byte[] randombytes = new byte[10];
+                using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+                {
+                    rng.GetBytes(randombytes);
+                }
+                BigInteger randomNum = new BigInteger(randombytes);
+                string tag = address + randomNum;
+                //创建合约文件
+                string contractFileName = string.Format("{0}/{1}.py",py_path, tag);
+                System.IO.File.WriteAllText(contractFileName,filetext);
+                //创建启动编译合约的文件
+                string runpy = string.Format("from boa.compiler import Compiler\nCompiler.load_and_save('{0}')", contractFileName);
+                string runFileName = string.Format("{0}/{1}_run.py",py_path, tag);
+                System.IO.File.WriteAllText(runFileName, runpy);
+                //执行编译
+                System.Diagnostics.ProcessStartInfo info = new System.Diagnostics.ProcessStartInfo();
+                info.WorkingDirectory = py_path;
+                info.FileName = "python3";
+                info.Arguments = runFileName;
+                info.CreateNoWindow = true;
+                info.RedirectStandardOutput = true;
+                info.RedirectStandardError = true;
+                info.RedirectStandardInput = true;
+                info.UseShellExecute = false;
+                System.Diagnostics.Process proces = System.Diagnostics.Process.Start(info);
+                proces.WaitForExit();
+                string outstr = proces.StandardOutput.ReadToEnd();
+                string avmFileName = string.Format("{0}/{1}.avm", py_path, tag);
+                string mapFileName = string.Format("{0}/{1}.map.json", py_path, tag);
+                string abiFileName = string.Format("{0}/{1}.abi.json", py_path, tag);
+                string str_avm = string.Empty;
+                string str_abi = string.Empty;
+                string str_map = string.Empty;
+                if (System.IO.File.Exists(avmFileName))
+                {
+                    byte[] avm = System.IO.File.ReadAllBytes(avmFileName);
+                    hash = ThinNeo.Helper.Bytes2HexString(((byte[])ThinNeo.Helper.GetScriptHashFromScript(avm)).Reverse().ToArray());
+                    hash = format(hash);
+                    str_avm = ThinNeo.Helper.Bytes2HexString(avm);
+                }
+                else
+                {
+                    return new JArray() { new JObject() { { "code", "1001" }, { "message", "编译失败,失败提示:没有生成对应的avm文件" }, { "hash", hash } } };
+                }
+                if (System.IO.File.Exists(mapFileName))
+                {
+                    str_map = System.IO.File.ReadAllText(mapFileName);
+                }
+                if (System.IO.File.Exists(abiFileName))
+                {
+                    str_abi = System.IO.File.ReadAllText(abiFileName);
+                }
+                else
+                {
+                    return new JArray() { new JObject() { { "code", "1001" }, { "message", "编译失败,失败提示:没有生成对应的avm文件" }, { "hash", hash } } };
+                }
+                //生成的文件上传到oss
+                ossClient.OssFileUpload(string.Format("{0}.py", hash), filetext);
+                ossClient.OssFileUpload(string.Format("{0}.avm", hash), str_avm);
+                ossClient.OssFileUpload(string.Format("{0}.abi.json", hash), str_abi);
+                ossClient.OssFileUpload(string.Format("{0}.map.json", hash), str_map);
+
+                //把生成的文件删除
+                System.IO.File.Delete(contractFileName);
+                System.IO.File.Delete(runFileName);
+                System.IO.File.Delete(avmFileName);
+                System.IO.File.Delete(mapFileName);
+                System.IO.File.Delete(abiFileName);
+            }
+            catch (Exception ex)
+            {
+                return new JArray() { new JObject() { { "code", "1001" }, { "message", "编译失败,失败提示:" + ex.Message }, { "hash", hash } } };
+            }
+            return new JArray() { new JObject() { { "code", "0000" }, { "message", "编译成功" }, { "hash", hash } } };
         }
 
         public JArray getContractCodeByHash(string address, string hash, string type=".all")
@@ -94,28 +180,37 @@ namespace NEL_OnlineDebuger_API.Service
             {
                 return new JArray { new JObject() { { "map", ossClient.OssFileDownLoad(System.IO.Path.Combine("", hash + ".map.json")) } } };
             }
+            if (type == ".py" || type == "py")
+            {
+                return new JArray { new JObject() { { "py", ossClient.OssFileDownLoad(System.IO.Path.Combine("", hash + ".py")) } } };
+            }
             // 获取合约文件
             string pathScript = "";
             string str_avm = ossClient.OssFileDownLoad(System.IO.Path.Combine(pathScript, hash + ".avm"));
             string str_cs = ossClient.OssFileDownLoad(System.IO.Path.Combine(pathScript, hash + ".cs"));
+            string str_py = ossClient.OssFileDownLoad(System.IO.Path.Combine(pathScript, hash + ".py"));
             var JO_map = (MyJson.IJsonNode)MyJson.Parse(ossClient.OssFileDownLoad(System.IO.Path.Combine(pathScript, hash + ".map.json")));
             var JO_abi = (MyJson.IJsonNode)MyJson.Parse(ossClient.OssFileDownLoad(System.IO.Path.Combine(pathScript, hash + ".abi.json")));
             JObject JO_result = new JObject();
             JO_result["avm"] = str_avm;
             JO_result["cs"] = str_cs;
+            JO_result["py"] = str_py;
             JO_result["map"] = JO_map?.ToString();
             JO_result["abi"] = JO_abi?.ToString();
             return new JArray() { JO_result };
         }
-        public void storeContractFile(string hash)
+        public void storeContractFile(string hash,string language)
         {
-            ossClient.OssFileStore(hash + ".cs");
+            if(language == "py")//py
+                ossClient.OssFileStore(hash + ".py");
+            else
+                ossClient.OssFileStore(hash + ".cs");
             ossClient.OssFileStore(hash + ".avm");
             ossClient.OssFileStore(hash + ".abi.json");
             ossClient.OssFileStore(hash + ".map.json");
         }
         
-        public JArray saveContract(string address, string scripthash, string name, string version, string author, string email, string desc, string acceptablePayment, string createStorage, string dynamicCall, string txid)
+        public JArray saveContract(string address, string scripthash, string name, string version, string author, string email, string desc, string acceptablePayment, string createStorage, string dynamicCall, string txid,string language)
         {
             //address + hash + name + version + author + email + desc + 可接受付款 + 创建存储区 + 动态调用 + txid
             scripthash = format(scripthash);
@@ -135,7 +230,8 @@ namespace NEL_OnlineDebuger_API.Service
                 {"dynamicCall", dynamicCall },
                 {"txid", txid },
                 {"createTime", nowtime },
-                {"lastUpdateTime", nowtime }
+                {"lastUpdateTime", nowtime },
+                {"language",language}
             }.ToString();
             string findStr = new JObject() { { "scripthash", scripthash} }.ToString();
             if(mh.GetDataCount(debug_mongodbConnStr, debug_mongodbDatabase, deployfileCol, findStr) > 0)
@@ -144,7 +240,7 @@ namespace NEL_OnlineDebuger_API.Service
             }
             mh.InsertOneData(debug_mongodbConnStr, debug_mongodbDatabase, deployfileCol, newdata);
             // 保存编译文件
-            storeContractFile(scripthash);
+            storeContractFile(scripthash, language);
             return new JArray() { new JObject() { { "code", "0000" }, { "message", "保存成功" } } };
         }
 
@@ -155,6 +251,7 @@ namespace NEL_OnlineDebuger_API.Service
             string sortStr = new JObject() { {"createTime", -1 } }.ToString();
             return mh.GetDataPagesWithField(debug_mongodbConnStr, debug_mongodbDatabase, deployfileCol, fieldStr, pageSize, pageNum, sortStr, findStr);
         }
+
         public JArray getContractDeployInfoByHash(string scripthash)
         {
             scripthash = format(scripthash);

@@ -55,7 +55,8 @@ namespace NEL_OnlineDebuger_API.Controllers
                         debug_mongodbConnStr = mh.debug_mongodbConnStr_testnet,
                         debug_mongodbDatabase = mh.debug_mongodbDatabase_testnet,
                         ossClient = new OssFileService(mh.nelOssRPCUrl_testnet),
-                        debugger = new CompileFileService(mh.nelDebugRPCUrl_testnet)
+                        debugger = new CompileFileService(mh.nelDebugRPCUrl_testnet),
+                        py_path = mh.py_path
                     };
                     claimService = new ClaimGasService
                     {
@@ -108,6 +109,10 @@ namespace NEL_OnlineDebuger_API.Controllers
                     // 根据地址获取交易id和提交时间
                     case "getTxCallContract":
                         result = commonService.getTxCallContract(req.@params[0].ToString());
+                        break;
+                    // teemo调用发送交易后存储交易
+                    case "saveTeemoTx":
+                        result = commonService.saveTeemoTx(req.@params[0].ToString(), req.@params[1].ToString());
                         break;
                     // 转发调用合约交易并存储结果
                     case "txCallContract":
@@ -245,23 +250,27 @@ namespace NEL_OnlineDebuger_API.Controllers
                         break;
                     // 3. 保存合约
                     case "storageContractFile":
-                        result = compileServiceNew.saveContract(
-                            req.@params[0].ToString(),
-                            req.@params[1].ToString(),
-                            req.@params[2].ToString(),
-                            req.@params[3].ToString(),
-                            req.@params[4].ToString(),
-                            req.@params[5].ToString(),
-                            req.@params[6].ToString(),
-                            req.@params[7].ToString(),
-                            req.@params[8].ToString(),
-                            req.@params[9].ToString(),
-                            req.@params[10].ToString()
+                    result = compileServiceNew.saveContract(
+                        req.@params[0].ToString(),
+                        req.@params[1].ToString(),
+                        req.@params[2].ToString(),
+                        req.@params[3].ToString(),
+                        req.@params[4].ToString(),
+                        req.@params[5].ToString(),
+                        req.@params[6].ToString(),
+                        req.@params[7].ToString(),
+                        req.@params[8].ToString(),
+                        req.@params[9].ToString(),
+                        req.@params[10].ToString(),
+                        req.@params.Length == 12 ? req.@params[11].ToString() : "cs"
                             );
                         break;
                     // 2. 编译文件
                     case "compileContractFile":
                         result = compileServiceNew.compileFile(req.@params[0].ToString(), req.@params[1].ToString());
+                        break;
+                    case "compilePythonContractFile":
+                    result = compileServiceNew.compilePythonFile(req.@params[0].ToString(),req.@params[1].ToString());
                         break;
                 }
             return result;
