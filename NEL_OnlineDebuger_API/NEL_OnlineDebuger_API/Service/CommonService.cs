@@ -12,13 +12,23 @@ namespace NEL_OnlineDebuger_API.Service
         public mongoHelper mh { set; get; }
         public string block_mongodbConnStr { get; set; }
         public string block_mongodbDatabase { get; set; }
+        public string analy_mongodbConnStr { get; set; }
+        public string analy_mongodbDatabase { get; set; }
         public string notify_mongodbConnStr { get; set; }
         public string notify_mongodbDatabase { get; set; }
         public string debug_mongodbConnStr { get; set; }
         public string debug_mongodbDatabase { get; set; }
         public string neoCliJsonRPCUrl { get; set; }
         public string txCallContractCol { get; set; } = "onlineDebuger_txCallContract";
-        
+
+        public JArray getTxidByAddressAndContract(string address,string contractHash)
+        {
+            string findStr = new JObject() { { "address", address } ,{ "contractHash",contractHash} }.ToString();
+            string fieldStr = new JObject() { { "txid", 1 } }.ToString();
+            var query = mh.GetDataWithField(analy_mongodbConnStr, analy_mongodbDatabase, "contract_call_info", fieldStr, findStr);
+            return query;
+        }
+
         public JArray getNotifyByTxid(string txid)
         {
             txid = format(txid);

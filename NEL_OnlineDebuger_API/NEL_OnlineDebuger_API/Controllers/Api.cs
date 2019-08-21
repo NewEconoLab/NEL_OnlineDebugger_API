@@ -36,6 +36,8 @@ namespace NEL_OnlineDebuger_API.Controllers
                         mh = mh,
                         block_mongodbConnStr = mh.block_mongodbConnStr_testnet,
                         block_mongodbDatabase = mh.block_mongodbDatabase_testnet,
+                        analy_mongodbConnStr = mh.analy_mongodbConnStr_testnet,
+                        analy_mongodbDatabase = mh.analy_mongodbDatabase_testnet,
                         notify_mongodbConnStr = mh.notify_mongodbConnStr_testnet,
                         notify_mongodbDatabase = mh.notify_mongodbDatabase_testnet,
                         neoCliJsonRPCUrl = mh.neoCliJsonRPCUrl_testnet,
@@ -98,6 +100,9 @@ namespace NEL_OnlineDebuger_API.Controllers
             {
                 switch (req.method)
                 {
+                    case "getTxidByAddressAndContract":
+                        result = commonService.getTxidByAddressAndContract(req.@params[0].ToString(), req.@params[1].ToString());
+                        break;
                     // 根据交易id获取通知数据
                     case "getNotifyByTxid":
                         result = commonService.getNotifyByTxid(req.@params[0].ToString());
