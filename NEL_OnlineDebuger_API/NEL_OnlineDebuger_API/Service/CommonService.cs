@@ -21,11 +21,12 @@ namespace NEL_OnlineDebuger_API.Service
         public string neoCliJsonRPCUrl { get; set; }
         public string txCallContractCol { get; set; } = "onlineDebuger_txCallContract";
 
-        public JArray getTxidByAddressAndContract(string address,string contractHash)
+        public JArray getTxidByAddressAndContract(string address,string contractHash, int pageNum = 1, int pageSize = 20)
         {
             string findStr = new JObject() { { "address", address } ,{ "contractHash",contractHash} }.ToString();
             string fieldStr = new JObject() { { "txid", 1 } }.ToString();
-            var query = mh.GetDataWithField(analy_mongodbConnStr, analy_mongodbDatabase, "contract_call_info", fieldStr, findStr);
+            string sortStr = new JObject() { { "blockIndex", -1 } }.ToString();
+            var query = mh.GetDataPagesWithField(analy_mongodbConnStr, analy_mongodbDatabase, "contract_call_info", fieldStr, pageSize, pageNum, sortStr, findStr);
             return query;
         }
 
