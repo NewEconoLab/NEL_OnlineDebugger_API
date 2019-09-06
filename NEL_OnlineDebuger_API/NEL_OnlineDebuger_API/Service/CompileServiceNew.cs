@@ -247,7 +247,7 @@ namespace NEL_OnlineDebuger_API.Service
         public JArray getContractRemarkByAddress(string address, int pageNum = 1, int pageSize = 20)
         {
             string findStr = new JObject() { {"address", address } }.ToString();
-            string fieldStr = MongoFieldHelper.toReturn(new string[] {"scripthash", "name" }).ToString();
+            string fieldStr = MongoFieldHelper.toReturn(new string[] {"scripthash", "name" , "language" }).ToString();
             string sortStr = new JObject() { {"createTime", -1 } }.ToString();
             return mh.GetDataPagesWithField(debug_mongodbConnStr, debug_mongodbDatabase, deployfileCol, fieldStr, pageSize, pageNum, sortStr, findStr);
         }
