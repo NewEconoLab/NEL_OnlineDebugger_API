@@ -35,6 +35,7 @@ namespace NEL_OnlineDebuger_API.Service
         public OssFileService ossClient { get; set; }
         public CompileFileService debugger { get; set; }
         public string py_path { get; set; }
+        public string cs_path { get; set; }
 
         public JArray compileFile(string address, string filetext)
         {
@@ -60,6 +61,83 @@ namespace NEL_OnlineDebuger_API.Service
                 return new JArray() { new JObject() { { "code", "1001" }, { "message", "编译失败,失败提示:" + message }, { "hash", hash } } };
             }
             return new JArray(){ new JObject() { { "code", "0000"}, { "message", "编译成功"}, { "hash", hash } } };
+        }
+
+        public JArray compileCsFile(string address,string filetext)
+        {
+            string hash = null;
+            try
+            {
+                //加入一个随机数
+                byte[] randombytes = new byte[10];
+                using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+                {
+                    rng.GetBytes(randombytes);
+                }
+                BigInteger randomNum = new BigInteger(randombytes);
+                string tag = address + randomNum;
+                //创建合约文件
+                string contractFileName = string.Format("{0}/{1}.cs", cs_path, tag);
+                System.IO.File.WriteAllText(contractFileName, filetext);
+                //执行编译
+                System.Diagnostics.ProcessStartInfo info = new System.Diagnostics.ProcessStartInfo();
+                info.WorkingDirectory = cs_path;
+                info.FileName = "dotnet";
+                info.Arguments = string.Format("neon.dll {0}", contractFileName);
+                info.CreateNoWindow = true;
+                info.RedirectStandardOutput = true;
+                info.RedirectStandardError = true;
+                info.RedirectStandardInput = true;
+                info.UseShellExecute = false;
+                System.Diagnostics.Process proces = System.Diagnostics.Process.Start(info);
+                proces.WaitForExit();
+                string outstr = proces.StandardOutput.ReadToEnd();
+                string nefFileName = string.Format("{0}/{1}.nef", py_path, tag);
+                string mapFileName = string.Format("{0}/{1}.map.json", py_path, tag);
+                string abiFileName = string.Format("{0}/{1}.abi.json", py_path, tag);
+                string str_avm = string.Empty;
+                string str_abi = string.Empty;
+                string str_map = string.Empty;
+                if (System.IO.File.Exists(nefFileName))
+                {
+                    byte[] avm = System.IO.File.ReadAllBytes(nefFileName);
+                    str_avm = ThinNeo.Helper.Bytes2HexString(avm);
+                }
+                else
+                {
+                    return new JArray() { new JObject() { { "code", "1001" }, { "message", "编译失败,失败提示:没有生成对应的avm文件" }, { "hash", hash } } };
+                }
+                if (System.IO.File.Exists(mapFileName))
+                {
+                    str_map = System.IO.File.ReadAllText(mapFileName);
+                }
+                if (System.IO.File.Exists(abiFileName))
+                {
+                    str_abi = System.IO.File.ReadAllText(abiFileName);
+                    JObject jo = JObject.Parse(str_abi);
+                    hash = jo["hash"].ToString();
+                }
+                else
+                {
+                    return new JArray() { new JObject() { { "code", "1001" }, { "message", "编译失败,失败提示:没有生成对应的avm文件" }, { "hash", hash } } };
+                }
+                //生成的文件上传到oss
+                ossClient.OssFileUpload(string.Format("{0}.cs", hash), filetext);
+                ossClient.OssFileUpload(string.Format("{0}.nef", hash), str_avm);
+                ossClient.OssFileUpload(string.Format("{0}.abi.json", hash), str_abi);
+                ossClient.OssFileUpload(string.Format("{0}.map.json", hash), str_map);
+
+                //把生成的文件删除
+                System.IO.File.Delete(contractFileName);
+                System.IO.File.Delete(nefFileName);
+                System.IO.File.Delete(mapFileName);
+                System.IO.File.Delete(abiFileName);
+            }
+            catch (Exception ex)
+            {
+                return new JArray() { new JObject() { { "code", "1001" }, { "message", "编译失败,失败提示:" + ex.Message }, { "hash", hash } } };
+            }
+            return new JArray() { new JObject() { { "code", "0000" }, { "message", "编译成功" }, { "hash", hash } } }; 
         }
 
         public JArray compilePythonFile(string address, string filetext)
