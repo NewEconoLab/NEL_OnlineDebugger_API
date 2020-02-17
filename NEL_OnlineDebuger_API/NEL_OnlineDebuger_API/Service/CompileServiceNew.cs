@@ -92,9 +92,9 @@ namespace NEL_OnlineDebuger_API.Service
                 System.Diagnostics.Process proces = System.Diagnostics.Process.Start(info);
                 proces.WaitForExit();
                 string outstr = proces.StandardOutput.ReadToEnd();
-                string nefFileName = string.Format("{0}/{1}.nef", py_path, tag);
-                string mapFileName = string.Format("{0}/{1}.map.json", py_path, tag);
-                string abiFileName = string.Format("{0}/{1}.abi.json", py_path, tag);
+                string nefFileName = string.Format("{0}/{1}.nef", cs_path, tag);
+                string mapFileName = string.Format("{0}/{1}.map.json", cs_path, tag);
+                string abiFileName = string.Format("{0}/{1}.abi.json", cs_path, tag);
                 string str_avm = string.Empty;
                 string str_abi = string.Empty;
                 string str_map = string.Empty;

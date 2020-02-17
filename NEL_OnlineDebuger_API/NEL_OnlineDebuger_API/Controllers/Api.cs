@@ -58,7 +58,8 @@ namespace NEL_OnlineDebuger_API.Controllers
                         debug_mongodbDatabase = mh.debug_mongodbDatabase_testnet,
                         //ossClient = new OssFileService(mh.nelOssRPCUrl_testnet),
                         //debugger = new CompileFileService(mh.nelDebugRPCUrl_testnet),
-                        py_path = mh.py_path
+                        py_path = mh.py_path,
+                        cs_path = mh.cs_path
                     };
                     claimService = new ClaimGasService
                     {
