@@ -49,42 +49,42 @@ namespace NEL_OnlineDebuger_API.Controllers
                         mh = mh,
                         notify_mongodbConnStr = mh.notify_mongodbConnStr_testnet,
                         notify_mongodbDatabase = mh.notify_mongodbDatabase_testnet,
-                        //ossClient = new OssFileService(mh.nelOssRPCUrl_testnet)
+                        ossClient = new OssFileService(mh.nelOssRPCUrl_testnet)
                     };
                     compileServiceNew = new CompileServiceNew
                     {
                         mh = mh,
                         debug_mongodbConnStr = mh.debug_mongodbConnStr_testnet,
                         debug_mongodbDatabase = mh.debug_mongodbDatabase_testnet,
-                        //ossClient = new OssFileService(mh.nelOssRPCUrl_testnet),
-                        //debugger = new CompileFileService(mh.nelDebugRPCUrl_testnet),
+                        ossClient = new OssFileService(mh.nelOssRPCUrl_testnet),
+                        debugger = new CompileFileService(mh.nelDebugRPCUrl_testnet),
                         py_path = mh.py_path,
                         cs_path = mh.cs_path
                     };
                     claimService = new ClaimGasService
                     {
                         assetid = mh.id_gas,
-                        //accountInfo = AccountInfo.getAccountInfoFromWif(mh.prikeywif_testnet),
+                        accountInfo = AccountInfo.getAccountInfoFromWif(mh.prikeywif_testnet),
                         mh = mh,
                         notify_mongodbConnStr = mh.notify_mongodbConnStr_testnet,
                         notify_mongodbDatabase = mh.notify_mongodbDatabase_testnet,
                         gasClaimCol = mh.gasClaimCol_testnet,
-                        //maxClaimAmount = int.Parse(mh.maxClaimAmount_testnet),
+                        maxClaimAmount = int.Parse(mh.maxClaimAmount_testnet),
                     };
                     claimTx4testnet = new ClaimGasTransaction
                     {
                         nelJsonRpcUrl = mh.nelJsonRPCUrl_testnet,
                         assetid = mh.id_gas,
-                        //accountInfo = AccountInfo.getAccountInfoFromWif(mh.prikeywif_testnet),
+                        accountInfo = AccountInfo.getAccountInfoFromWif(mh.prikeywif_testnet),
                         mh = mh,
                         notify_mongodbConnStr = mh.notify_mongodbConnStr_testnet,
                         notify_mongodbDatabase = mh.notify_mongodbDatabase_testnet,
                         gasClaimCol = mh.gasClaimCol_testnet,
                         block_mongodbConnStr = mh.block_mongodbConnStr_testnet,
                         block_mongodbDatabase = mh.block_mongodbDatabase_testnet,
-                        //batchSendInterval = int.Parse(mh.batchSendInterval_testnet),
-                        //checkTxInterval = int.Parse(mh.checkTxInterval_testnet),
-                        //checkTxCount = int.Parse(mh.checkTxCount_testnet)
+                        batchSendInterval = int.Parse(mh.batchSendInterval_testnet),
+                        checkTxInterval = int.Parse(mh.checkTxInterval_testnet),
+                        checkTxCount = int.Parse(mh.checkTxCount_testnet)
                     };
                     // 
                     new Task(() => claimTx4testnet.claimGasLoop()).Start();
