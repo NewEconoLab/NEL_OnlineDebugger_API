@@ -262,17 +262,23 @@ namespace NEL_OnlineDebuger_API.Service
             {
                 return new JArray { new JObject() { { "py", ossClient.OssFileDownLoad(System.IO.Path.Combine("", hash + ".py")) } } };
             }
+            if (type == ".nef" || type == "nef")
+            {
+                return new JArray { new JObject() { { "nef", ossClient.OssFileDownLoad(System.IO.Path.Combine("", hash + ".nef")) } } };
+            }
             // 获取合约文件
             string pathScript = "";
             string str_avm = ossClient.OssFileDownLoad(System.IO.Path.Combine(pathScript, hash + ".avm"));
             string str_cs = ossClient.OssFileDownLoad(System.IO.Path.Combine(pathScript, hash + ".cs"));
             string str_py = ossClient.OssFileDownLoad(System.IO.Path.Combine(pathScript, hash + ".py"));
+            string str_nef = ossClient.OssFileDownLoad(System.IO.Path.Combine(pathScript, hash + ".nef"));
             var JO_map = (MyJson.IJsonNode)MyJson.Parse(ossClient.OssFileDownLoad(System.IO.Path.Combine(pathScript, hash + ".map.json")));
             var JO_abi = (MyJson.IJsonNode)MyJson.Parse(ossClient.OssFileDownLoad(System.IO.Path.Combine(pathScript, hash + ".abi.json")));
             JObject JO_result = new JObject();
             JO_result["avm"] = str_avm;
             JO_result["cs"] = str_cs;
             JO_result["py"] = str_py;
+            JO_result["nef"] = str_nef;
             JO_result["map"] = JO_map?.ToString();
             JO_result["abi"] = JO_abi?.ToString();
             return new JArray() { JO_result };
