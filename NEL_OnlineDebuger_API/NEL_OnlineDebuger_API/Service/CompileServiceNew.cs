@@ -132,7 +132,7 @@ namespace NEL_OnlineDebuger_API.Service
                 System.IO.File.Delete(nefFileName);
                 System.IO.File.Delete(mapFileName);
                 System.IO.File.Delete(abiFileName);
-                System.IO.File.Delete(str_manifest);
+                System.IO.File.Delete(manifestFileName);
             }
             catch (Exception ex)
             {
