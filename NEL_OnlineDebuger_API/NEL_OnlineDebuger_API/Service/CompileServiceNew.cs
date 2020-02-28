@@ -75,7 +75,7 @@ namespace NEL_OnlineDebuger_API.Service
                     rng.GetBytes(randombytes);
                 }
                 BigInteger randomNum = new BigInteger(randombytes);
-                string tag = address + randomNum;
+                string tag = randomNum.ToString();
                 //创建合约文件
                 string contractFileName = string.Format("{0}/{1}.cs", cs_path, tag);
                 System.IO.File.WriteAllText(contractFileName, filetext);
