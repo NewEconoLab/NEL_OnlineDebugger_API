@@ -267,6 +267,10 @@ namespace NEL_OnlineDebuger_API.Service
             {
                 return new JArray { new JObject() { { "nef", ossClient.OssFileDownLoad(System.IO.Path.Combine("", hash + ".nef")) } } };
             }
+            if (type == ".manifest" || type == "manifest")
+            {
+                return new JArray { new JObject() { { "nef", ossClient.OssFileDownLoad(System.IO.Path.Combine("", hash + ".manifest.json")) } } };
+            }
             // 获取合约文件
             string pathScript = "";
             string str_avm = ossClient.OssFileDownLoad(System.IO.Path.Combine(pathScript, hash + ".avm"));
@@ -275,6 +279,7 @@ namespace NEL_OnlineDebuger_API.Service
             string str_nef = ossClient.OssFileDownLoad(System.IO.Path.Combine(pathScript, hash + ".nef"));
             var JO_map = (MyJson.IJsonNode)MyJson.Parse(ossClient.OssFileDownLoad(System.IO.Path.Combine(pathScript, hash + ".map.json")));
             var JO_abi = (MyJson.IJsonNode)MyJson.Parse(ossClient.OssFileDownLoad(System.IO.Path.Combine(pathScript, hash + ".abi.json")));
+            var JO_manifest = (MyJson.IJsonNode)MyJson.Parse(ossClient.OssFileDownLoad(System.IO.Path.Combine(pathScript, hash + ".manifest.json")));
             JObject JO_result = new JObject();
             JO_result["avm"] = str_avm;
             JO_result["cs"] = str_cs;
@@ -282,8 +287,10 @@ namespace NEL_OnlineDebuger_API.Service
             JO_result["nef"] = str_nef;
             JO_result["map"] = JO_map?.ToString();
             JO_result["abi"] = JO_abi?.ToString();
+            JO_result["manifest"] = JO_manifest?.ToString();
             return new JArray() { JO_result };
         }
+
         public void storeContractFile(string hash,string language)
         {
             if(language == "py")//py
