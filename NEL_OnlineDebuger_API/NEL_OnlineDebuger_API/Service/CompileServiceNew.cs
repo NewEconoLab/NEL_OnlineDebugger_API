@@ -95,13 +95,21 @@ namespace NEL_OnlineDebuger_API.Service
                 string nefFileName = string.Format("{0}/{1}.nef", cs_path, tag);
                 string mapFileName = string.Format("{0}/{1}.map.json", cs_path, tag);
                 string abiFileName = string.Format("{0}/{1}.abi.json", cs_path, tag);
+                string manifestFileName = string.Format("{0}/{1}.manifest.json", cs_path, tag);
                 string str_avm = string.Empty;
                 string str_abi = string.Empty;
                 string str_map = string.Empty;
-                if (System.IO.File.Exists(nefFileName))
+                string str_manifest = string.Empty;
+                if (System.IO.File.Exists(nefFileName) && System.IO.File.Exists(abiFileName) && System.IO.File.Exists(manifestFileName))
                 {
                     byte[] avm = System.IO.File.ReadAllBytes(nefFileName);
                     str_avm = ThinNeo.Helper.Bytes2HexString(avm);
+
+                    str_abi = System.IO.File.ReadAllText(abiFileName);
+                    JObject jo = JObject.Parse(str_abi);
+                    hash = jo["hash"].ToString();
+
+                    str_manifest = System.IO.File.ReadAllText(manifestFileName);
                 }
                 else
                 {
@@ -111,27 +119,20 @@ namespace NEL_OnlineDebuger_API.Service
                 {
                     str_map = System.IO.File.ReadAllText(mapFileName);
                 }
-                if (System.IO.File.Exists(abiFileName))
-                {
-                    str_abi = System.IO.File.ReadAllText(abiFileName);
-                    JObject jo = JObject.Parse(str_abi);
-                    hash = jo["hash"].ToString();
-                }
-                else
-                {
-                    return new JArray() { new JObject() { { "code", "1001" }, { "message", "编译失败,失败提示:没有生成对应的avm文件" }, { "hash", hash } } };
-                }
+
                 //生成的文件上传到oss
                 ossClient.OssFileUpload(string.Format("{0}.cs", hash), filetext);
                 ossClient.OssFileUpload(string.Format("{0}.nef", hash), str_avm);
                 ossClient.OssFileUpload(string.Format("{0}.abi.json", hash), str_abi);
                 ossClient.OssFileUpload(string.Format("{0}.map.json", hash), str_map);
+                ossClient.OssFileUpload(string.Format("{0}.manifest.json", hash), str_manifest);
 
                 //把生成的文件删除
                 System.IO.File.Delete(contractFileName);
                 System.IO.File.Delete(nefFileName);
                 System.IO.File.Delete(mapFileName);
                 System.IO.File.Delete(abiFileName);
+                System.IO.File.Delete(str_manifest);
             }
             catch (Exception ex)
             {
