@@ -76,6 +76,7 @@ namespace NEL_OnlineDebuger_API.Service
                 }
                 BigInteger randomNum = new BigInteger(randombytes);
                 string tag = randomNum.ToString();
+                Console.WriteLine();
                 //创建合约文件
                 string contractFileName = string.Format("{0}/{1}.cs", cs_path, tag);
                 System.IO.File.WriteAllText(contractFileName, filetext);
@@ -91,7 +92,10 @@ namespace NEL_OnlineDebuger_API.Service
                 info.UseShellExecute = false;
                 System.Diagnostics.Process proces = System.Diagnostics.Process.Start(info);
                 proces.WaitForExit();
-                string outstr = proces.StandardOutput.ReadToEnd();
+                //string outstr = proces.StandardOutput.ReadToEnd();
+                string errstr = proces.StandardError.ReadToEnd();
+                if(!string.IsNullOrEmpty(errstr))
+                    return new JArray() { new JObject() { { "code", "1001" }, { "message", errstr }} };
                 string nefFileName = string.Format("{0}/{1}.nef", cs_path, tag);
                 string mapFileName = string.Format("{0}/{1}.map.json", cs_path, tag);
                 string abiFileName = string.Format("{0}/{1}.abi.json", cs_path, tag);
@@ -113,6 +117,7 @@ namespace NEL_OnlineDebuger_API.Service
                 }
                 else
                 {
+                    System.IO.File.Delete(contractFileName);
                     return new JArray() { new JObject() { { "code", "1001" }, { "message", "编译失败,失败提示:没有生成对应的avm文件" }, { "hash", hash } } };
                 }
                 if (System.IO.File.Exists(mapFileName))
