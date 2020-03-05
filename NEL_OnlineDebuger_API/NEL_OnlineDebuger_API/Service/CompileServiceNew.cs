@@ -93,7 +93,7 @@ namespace NEL_OnlineDebuger_API.Service
                 System.Diagnostics.Process proces = System.Diagnostics.Process.Start(info);
                 proces.WaitForExit();
                 //string outstr = proces.StandardOutput.ReadToEnd();
-                string errstr = proces.StandardError.ReadToEnd();
+                string errstr = proces.StandardError.ReadLine();
                 if(!string.IsNullOrEmpty(errstr))
                     return new JArray() { new JObject() { { "code", "1001" }, { "message", errstr }} };
                 string nefFileName = string.Format("{0}/{1}.nef", cs_path, tag);
