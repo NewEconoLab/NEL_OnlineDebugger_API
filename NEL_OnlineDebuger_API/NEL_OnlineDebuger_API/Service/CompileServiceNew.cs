@@ -35,7 +35,7 @@ namespace NEL_OnlineDebuger_API.Service
         public OssFileService ossClient { get; set; }
         public CompileFileService debugger { get; set; }
         public string py_path { get; set; }
-        public string cs_path { get; set; }
+        public JObject cs_paths { get; set; }
 
         public JArray compileFile(string address, string filetext)
         {
@@ -63,8 +63,12 @@ namespace NEL_OnlineDebuger_API.Service
             return new JArray(){ new JObject() { { "code", "0000"}, { "message", "编译成功"}, { "hash", hash } } };
         }
 
-        public JArray compileCsFile(string address,string filetext)
+        public JArray compileCsFile(string address,string filetext,string version)
         {
+            if (version == "2.9.3")
+                return compileFile(address, filetext);
+            if (!cs_paths.ContainsKey(version))
+                return new JArray() { new JObject() { { "code", "1001" }, { "message", "错误的版本号" } } };
             string hash = null;
             try
             {
@@ -78,6 +82,7 @@ namespace NEL_OnlineDebuger_API.Service
                 string tag = randomNum.ToString();
                 Console.WriteLine();
                 //创建合约文件
+                string cs_path = (string)cs_paths[version];
                 string contractFileName = string.Format("{0}/{1}.cs", cs_path, tag);
                 System.IO.File.WriteAllText(contractFileName, filetext);
                 //执行编译
@@ -226,6 +231,16 @@ namespace NEL_OnlineDebuger_API.Service
                 return new JArray() { new JObject() { { "code", "1001" }, { "message", "编译失败,失败提示:" + ex.Message }, { "hash", hash } } };
             }
             return new JArray() { new JObject() { { "code", "0000" }, { "message", "编译成功" }, { "hash", hash } } };
+        }
+
+        public JArray getCompilerVersions()
+        {
+            JArray ja = new JArray();
+            foreach (var c in cs_paths)
+            {
+                ja.Add(new JValue(c.Key));
+            }
+            return ja;
         }
 
         public JArray getContractCodeByHash(string address, string hash, string type=".all")

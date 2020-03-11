@@ -59,7 +59,7 @@ namespace NEL_OnlineDebuger_API.Controllers
                         ossClient = new OssFileService(mh.nelOssRPCUrl_testnet),
                         debugger = new CompileFileService(mh.nelDebugRPCUrl_testnet),
                         py_path = mh.py_path,
-                        cs_path = mh.cs_path
+                        cs_paths = mh.cs_paths
                     };
                     claimService = new ClaimGasService
                     {
@@ -276,11 +276,14 @@ namespace NEL_OnlineDebuger_API.Controllers
                         result = compileServiceNew.compileFile(req.@params[0].ToString(), req.@params[1].ToString());
                         break;
                     case "compileCsContractFile":
-                        result = compileServiceNew.compileCsFile(req.@params[0].ToString(), req.@params[1].ToString());
+                        result = compileServiceNew.compileCsFile(req.@params[0].ToString(), req.@params[1].ToString(),req.@params.ToString());
                         break;
                     case "compilePythonContractFile":
                         result = compileServiceNew.compilePythonFile(req.@params[0].ToString(),req.@params[1].ToString());
                         break;
+                    case "getCompilerVersions":
+                        result = compileServiceNew.getCompilerVersions();
+                    break;
                 }
             return result;
                 //if (result.Count == 0)
