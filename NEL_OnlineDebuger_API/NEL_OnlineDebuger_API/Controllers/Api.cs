@@ -276,7 +276,7 @@ namespace NEL_OnlineDebuger_API.Controllers
                         result = compileServiceNew.compileFile(req.@params[0].ToString(), req.@params[1].ToString());
                         break;
                     case "compileCsContractFile":
-                        result = compileServiceNew.compileCsFile(req.@params[0].ToString(), req.@params[1].ToString(),req.@params.ToString());
+                        result = compileServiceNew.compileCsFile(req.@params[0].ToString(), req.@params[1].ToString(),req.@params[2].ToString());
                         break;
                     case "compilePythonContractFile":
                         result = compileServiceNew.compilePythonFile(req.@params[0].ToString(),req.@params[1].ToString());
