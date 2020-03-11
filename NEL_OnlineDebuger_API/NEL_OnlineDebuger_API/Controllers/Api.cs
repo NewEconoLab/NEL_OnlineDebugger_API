@@ -271,10 +271,6 @@ namespace NEL_OnlineDebuger_API.Controllers
                         req.@params.Length == 12 ? req.@params[11].ToString() : "cs"
                             );
                         break;
-                    // 2. 编译文件
-                    case "compileContractFile":
-                        result = compileServiceNew.compileFile(req.@params[0].ToString(), req.@params[1].ToString());
-                        break;
                     case "compileCsContractFile":
                         result = compileServiceNew.compileCsFile(req.@params[0].ToString(), req.@params[1].ToString(),req.@params[2].ToString());
                         break;
