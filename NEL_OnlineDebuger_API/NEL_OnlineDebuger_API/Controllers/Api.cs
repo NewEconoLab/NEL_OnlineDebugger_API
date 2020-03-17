@@ -256,19 +256,15 @@ namespace NEL_OnlineDebuger_API.Controllers
                         break;
                     // 3. 保存合约
                     case "storageContractFile":
-                    result = compileServiceNew.saveContract(
-                        req.@params[0].ToString(),
-                        req.@params[1].ToString(),
-                        req.@params[2].ToString(),
-                        req.@params[3].ToString(),
-                        req.@params[4].ToString(),
-                        req.@params[5].ToString(),
-                        req.@params[6].ToString(),
-                        req.@params[7].ToString(),
-                        req.@params[8].ToString(),
-                        req.@params[9].ToString(),
-                        req.@params[10].ToString(),
-                        req.@params.Length == 12 ? req.@params[11].ToString() : "cs"
+                        result = compileServiceNew.storeContractFile(
+                            req.@params[0].ToString(),
+                            req.@params[1].ToString(),
+                            req.@params[2].ToString(),
+                            req.@params[3].ToString(),
+                            req.@params[4].ToString(),
+                            req.@params[5].ToString(),
+                            req.@params[6].ToString(),
+                            req.@params[7].ToString()
                             );
                         break;
                     case "compileCsContractFile":

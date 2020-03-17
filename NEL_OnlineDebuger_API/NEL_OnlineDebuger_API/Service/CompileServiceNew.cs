@@ -273,7 +273,7 @@ namespace NEL_OnlineDebuger_API.Service
             return new JArray() { JO_result };
         }
 
-        public void storeContractFile(string hash,string language)
+        public void storeFile(string hash,string language)
         {
             if(language == "py")//py
                 ossClient.OssFileStore(hash + ".py");
@@ -285,44 +285,43 @@ namespace NEL_OnlineDebuger_API.Service
             ossClient.OssFileStore(hash + ".manifest.json");
         }
         
-        public JArray saveContract(string address, string scripthash, string name, string version, string author, string email, string desc, string acceptablePayment, string createStorage, string dynamicCall, string txid,string language)
+        public JArray storeContractFile(string address, string scripthash, string name,
+            string version, string payable, string storage, string language, string txid)
         {
             //address + hash + name + version + author + email + desc + 可接受付款 + 创建存储区 + 动态调用 + txid
+            //address + hash + name + version + 可接受付款 + 创建存储区 + 语言 + txid
             scripthash = format(scripthash);
             txid = format(txid);
             // 保存部署信息
-            long nowtime = TimeHelper.GetTimeStamp();
-            string newdata = new JObject() {
+            var nowtime = TimeHelper.GetTimeStamp();
+            var newdata = new JObject() {
                 {"address", address },
                 {"scripthash", scripthash },
                 {"name", name },
                 {"version", version },
-                {"author", author },
-                {"email", email },
-                {"desc", desc },
-                {"acceptablePayment", acceptablePayment },
-                {"createStorage", createStorage },
-                {"dynamicCall", dynamicCall },
+                {"acceptablePayment", payable },
+                {"createStorage", storage },
+                //{"dynamicCall", dynamicCall },
+                {"language",language},
                 {"txid", txid },
                 {"createTime", nowtime },
-                {"lastUpdateTime", nowtime },
-                {"language",language}
+                {"lastUpdateTime", nowtime }
             }.ToString();
-            string findStr = new JObject() { { "scripthash", scripthash} }.ToString();
-            if(mh.GetDataCount(debug_mongodbConnStr, debug_mongodbDatabase, deployfileCol, findStr) > 0)
+            var findStr = new JObject() { { "scripthash", scripthash } }.ToString();
+            if (mh.GetDataCount(debug_mongodbConnStr, debug_mongodbDatabase, deployfileCol, findStr) > 0)
             {
                 return new JArray() { new JObject() { { "code", "0000" }, { "message", "重复保存" } } };
             }
             mh.InsertOneData(debug_mongodbConnStr, debug_mongodbDatabase, deployfileCol, newdata);
             // 保存编译文件
-            storeContractFile(scripthash, language);
+            storeFile(scripthash, language);
             return new JArray() { new JObject() { { "code", "0000" }, { "message", "保存成功" } } };
         }
 
         public JArray getContractRemarkByAddress(string address, int pageNum = 1, int pageSize = 20)
         {
-            string findStr = new JObject() { {"address", address } }.ToString();
-            string fieldStr = MongoFieldHelper.toReturn(new string[] {"scripthash", "name" , "language" }).ToString();
+            var findStr = new JObject() { {"address", address } }.ToString();
+            var fieldStr = MongoFieldHelper.toReturn(new string[] {"scripthash", "name" , "language" }).ToString();
             string sortStr = new JObject() { {"createTime", -1 } }.ToString();
             return mh.GetDataPagesWithField(debug_mongodbConnStr, debug_mongodbDatabase, deployfileCol, fieldStr, pageSize, pageNum, sortStr, findStr);
         }
@@ -330,8 +329,21 @@ namespace NEL_OnlineDebuger_API.Service
         public JArray getContractDeployInfoByHash(string scripthash)
         {
             scripthash = format(scripthash);
-            string findStr = new JObject() { { "scripthash", scripthash } }.ToString();
-            return mh.GetData(debug_mongodbConnStr, debug_mongodbDatabase, deployfileCol, findStr);
+            var findStr = new JObject() { { "scripthash", scripthash } }.ToString();
+            var queryRes = mh.GetData(debug_mongodbConnStr, debug_mongodbDatabase, deployfileCol, findStr);
+            if(queryRes.Count == 0) return queryRes;
+
+            var item = queryRes[0];
+            var res = new JObject();
+            res["address"] = item["address"];
+            res["scripthash"] = item["scripthash"];
+            res["name"] = item["name"];
+            res["version"] = item["version"];
+            res["acceptablePayment"] = item["acceptablePayment"];
+            res["createStorage"] = item["createStorage"];
+            res["language"] = item["language"];
+            res["txid"] = item["txid"];
+            return new JArray { res };
         }
 
         public string format(string txid)
