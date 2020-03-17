@@ -30,8 +30,8 @@ namespace NEL_OnlineDebuger_API.Service
         public mongoHelper mh { set; get; }
         public string debug_mongodbConnStr { get; set; }
         public string debug_mongodbDatabase { get; set; }
-        public string compilefileCol { get; set; } = "onlineDebuger_compilefile";
-        public string deployfileCol { get; set; } = "onlineDebuger_deployfile";
+        public string compilefileCol { get; set; } = "neo3dev_compilefile";
+        public string deployfileCol { get; set; } = "neo3dev_deployfile";
         public OssFileService ossClient { get; set; }
         public CompileFileService debugger { get; set; }
         public string py_path { get; set; }

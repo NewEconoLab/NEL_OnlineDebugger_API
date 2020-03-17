@@ -21,8 +21,8 @@ namespace NEL_Wallet_API.Service
         public string notify_mongodbDatabase { get; set; }
         public string block_mongodbConnStr { get; set; }
         public string block_mongodbDatabase { get; set; }
-        
-        public string gasClaimCol { get; set; }
+
+        public string gasClaimCol { get; set; } = "neo3dev_gasClaimCol";
         public int maxClaimAmount { get; set; }
 
 
