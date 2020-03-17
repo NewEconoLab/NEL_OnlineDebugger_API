@@ -66,9 +66,8 @@ namespace NEL_OnlineDebuger_API.Controllers
                         assetid = mh.id_gas,
                         accountInfo = AccountInfo.getAccountInfoFromWif(mh.prikeywif_testnet),
                         mh = mh,
-                        notify_mongodbConnStr = mh.notify_mongodbConnStr_testnet,
-                        notify_mongodbDatabase = mh.notify_mongodbDatabase_testnet,
-                        gasClaimCol = mh.gasClaimCol_testnet,
+                        debug_mongodbConnStr = mh.debug_mongodbConnStr_testnet,
+                        debug_mongodbDatabase = mh.debug_mongodbDatabase_testnet,
                         maxClaimAmount = int.Parse(mh.maxClaimAmount_testnet),
                     };
                     claimTx4testnet = new ClaimGasTransaction
@@ -77,9 +76,8 @@ namespace NEL_OnlineDebuger_API.Controllers
                         assetid = mh.id_gas,
                         accountInfo = AccountInfo.getAccountInfoFromWif(mh.prikeywif_testnet),
                         mh = mh,
-                        notify_mongodbConnStr = mh.notify_mongodbConnStr_testnet,
-                        notify_mongodbDatabase = mh.notify_mongodbDatabase_testnet,
-                        gasClaimCol = mh.gasClaimCol_testnet,
+                        debug_mongodbConnStr = mh.debug_mongodbConnStr_testnet,
+                        debug_mongodbDatabase = mh.debug_mongodbDatabase_testnet,
                         block_mongodbConnStr = mh.block_mongodbConnStr_testnet,
                         block_mongodbDatabase = mh.block_mongodbDatabase_testnet,
                         batchSendInterval = int.Parse(mh.batchSendInterval_testnet),

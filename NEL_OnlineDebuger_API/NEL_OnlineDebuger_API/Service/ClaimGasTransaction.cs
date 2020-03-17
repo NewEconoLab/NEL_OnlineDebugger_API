@@ -19,9 +19,9 @@ namespace NEL_Wallet_API.Service
         public string block_mongodbConnStr { get; set; }
         public string block_mongodbDatabase { get; set; }
         public mongoHelper mh { set; get; }
-        public string notify_mongodbConnStr { get; set; }
-        public string notify_mongodbDatabase { get; set; }
-        public string gasClaimCol { get; set; }
+        public string debug_mongodbConnStr { get; set; }
+        public string debug_mongodbDatabase { get; set; }
+        public string gasClaimCol { get; set; } = "neo3dev_gasClaimCol";
 
         public int batchSendInterval { get; set; } = 10; /*默认10分钟*/
         public int checkTxInterval { get; set; }
@@ -38,7 +38,7 @@ namespace NEL_Wallet_API.Service
                     string filter = new JObject() { { "lasttime", new JObject() { { "$gt", nowtime - ONE_DAY_SECONDS } } }, { "state", "1" } }.ToString();
                     string fieldStr = new JObject() { { "address", 1 }, { "amount", 1 } }.ToString();
                     string sortStr = new JObject() { { "lasttime", 1 } }.ToString();
-                    JArray res = mh.GetDataPagesWithField(notify_mongodbConnStr, notify_mongodbDatabase, gasClaimCol, fieldStr, 33/*默认33个*/, 1, sortStr, filter);
+                    JArray res = mh.GetDataPagesWithField(debug_mongodbConnStr, debug_mongodbDatabase, gasClaimCol, fieldStr, 33/*默认33个*/, 1, sortStr, filter);
                     if (res == null || res.Count() == 0) continue;
 
                     // 一笔交易多输出
@@ -76,7 +76,7 @@ namespace NEL_Wallet_API.Service
                 {
                     string findStr = MongoFieldHelper.toFilter(address.ToArray(), "address").ToString();
                     string updateData = new JObject() { { "$set", new JObject() { { "state", "2" }, { "txid", txid } } } }.ToString();
-                    mh.UpdateData(notify_mongodbConnStr, notify_mongodbDatabase, gasClaimCol, updateData, findStr);
+                    mh.UpdateData(debug_mongodbConnStr, debug_mongodbDatabase, gasClaimCol, updateData, findStr);
                 }
             }
         }
