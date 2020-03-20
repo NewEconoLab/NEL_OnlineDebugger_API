@@ -41,7 +41,7 @@ namespace NEL_OnlineDebuger_API.Service
         {
             txid = format(txid);
             var findStr = new JObject{ {"txid",txid } }.ToString();
-            var fieldStr = new JObject { "dumpinfo", 1 }.ToString();
+            var fieldStr = new JObject { { "dumpinfo", 1 } }.ToString();
             //return mh.GetData(block_mongodbConnStr, block_mongodbDatabase, "DumpInfos", findStr);
             return mh.GetDataWithField(block_mongodbConnStr, block_mongodbDatabase, "notify", fieldStr, findStr);
         }
