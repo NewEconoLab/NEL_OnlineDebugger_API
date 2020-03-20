@@ -40,9 +40,10 @@ namespace NEL_OnlineDebuger_API.Service
         public JArray getDumpInfoByTxid(string txid)
         {
             txid = format(txid);
-            string findStr = new JObject() { {"txid",txid } }.ToString();
+            var findStr = new JObject{ {"txid",txid } }.ToString();
+            var fieldStr = new JObject { "dumpinfo", 1 }.ToString();
             //return mh.GetData(block_mongodbConnStr, block_mongodbDatabase, "DumpInfos", findStr);
-            return mh.GetData(block_mongodbConnStr, block_mongodbDatabase, "dumpinfos", findStr);
+            return mh.GetDataWithField(block_mongodbConnStr, block_mongodbDatabase, "notify", fieldStr, findStr);
         }
         public JArray getTxCallContract(string address, int pageNum=1, int pageSize=20)
         {
