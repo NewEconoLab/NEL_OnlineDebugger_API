@@ -23,6 +23,14 @@ namespace NEL_OnlineDebuger_API.Service
 
         public JArray getTxidByAddressAndContract(string address,string contractHash, int pageNum = 1, int pageSize = 20)
         {
+            var findStr = new JObject() { { "from", address }, { "to", contractHash } }.ToString();
+            var fieldStr = new JObject { { "txid", 1 }, { "blockTimestamp", 1 } }.ToString();
+            var sortStr = new JObject { { "blockIndex", -1 } }.ToString(); //
+            var query = mh.GetDataPagesWithField(block_mongodbConnStr, block_mongodbDatabase, "contract_exec_detail", fieldStr, pageSize, pageNum, sortStr, findStr);
+            return query;
+        }
+        public JArray getTxidByAddressAndContractOld(string address,string contractHash, int pageNum = 1, int pageSize = 20)
+        {
             string findStr = new JObject() { { "address", address } ,{ "contractHash",contractHash} }.ToString();
             string fieldStr = new JObject() { { "txid", 1 },{ "time",1} }.ToString();
             string sortStr = new JObject() { { "blockIndex", -1 } }.ToString();
