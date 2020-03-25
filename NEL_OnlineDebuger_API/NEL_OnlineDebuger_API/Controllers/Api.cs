@@ -15,7 +15,6 @@ namespace NEL_OnlineDebuger_API.Controllers
     {
         private string netnode { get; set; }
         private ClaimGasService claimService;
-        private ClaimGasTransaction claimTx4testnet;
         private CompileService compileService;
         private CompileServiceNew compileServiceNew;
         private CommonService commonService;
@@ -70,22 +69,6 @@ namespace NEL_OnlineDebuger_API.Controllers
                         debug_mongodbDatabase = mh.debug_mongodbDatabase_testnet,
                         maxClaimAmount = int.Parse(mh.maxClaimAmount_testnet),
                     };
-                    claimTx4testnet = new ClaimGasTransaction
-                    {
-                        nelJsonRpcUrl = mh.nelJsonRPCUrl_testnet,
-                        assetid = mh.id_gas,
-                        accountInfo = AccountInfo.getAccountInfoFromWif(mh.prikeywif_testnet),
-                        mh = mh,
-                        debug_mongodbConnStr = mh.debug_mongodbConnStr_testnet,
-                        debug_mongodbDatabase = mh.debug_mongodbDatabase_testnet,
-                        block_mongodbConnStr = mh.block_mongodbConnStr_testnet,
-                        block_mongodbDatabase = mh.block_mongodbDatabase_testnet,
-                        batchSendInterval = int.Parse(mh.batchSendInterval_testnet),
-                        checkTxInterval = int.Parse(mh.checkTxInterval_testnet),
-                        checkTxCount = int.Parse(mh.checkTxCount_testnet)
-                    };
-                    // 
-                    new Task(() => claimTx4testnet.claimGasLoop()).Start();
                     break;
                 case "mainnet":
                     break;
