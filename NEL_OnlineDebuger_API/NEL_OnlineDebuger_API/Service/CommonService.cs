@@ -23,7 +23,7 @@ namespace NEL_OnlineDebuger_API.Service
 
         public JArray getTxidByAddressAndContract(string address,string contractHash, int pageNum = 1, int pageSize = 20)
         {
-            address = address.address2pubkeyHash();
+            address = address.address2pubkeyHashN();
             contractHash = format(contractHash);
             var findStr = new JObject() { { "from", address }, { "to", contractHash } }.ToString();
             var fieldStr = new JObject { { "txid", 1 }, { "blockTimestamp", 1 } }.ToString();
