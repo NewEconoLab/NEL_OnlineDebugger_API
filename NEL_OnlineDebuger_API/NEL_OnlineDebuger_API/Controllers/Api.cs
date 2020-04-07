@@ -100,6 +100,14 @@ namespace NEL_OnlineDebuger_API.Controllers
             {
                 switch (req.method)
                 {
+                    //
+                    case "getContractTemplateList":
+                        result = commonService.getContractTemplateList(
+                            int.Parse(req.@params[0].ToString()),
+                            int.Parse(req.@params[1].ToString())
+                            );
+                        break;
+                    //
                     case "getTxidByAddressAndContract":
                         result = commonService.getTxidByAddressAndContract(req.@params[0].ToString(), req.@params[1].ToString(),int.Parse(req.@params[2].ToString()),int.Parse(req.@params[3].ToString()));
                         break;
