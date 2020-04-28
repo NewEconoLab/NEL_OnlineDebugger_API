@@ -20,7 +20,34 @@ namespace NEL_OnlineDebuger_API.Service
         public string debug_mongodbDatabase { get; set; }
         public string neoCliJsonRPCUrl { get; set; }
         public string txCallContractCol { get; set; } = "onlineDebuger_txCallContract";
+        public string contractTemplateCol { get; set; } = "onlineDebug_contractTemplate";
 
+        public JArray getContractTemplateList(int pageNum = 1, int pageSize = 10)
+        {
+            var findStr = "{}";
+            var count = mh.GetDataCount(debug_mongodbConnStr, debug_mongodbDatabase, contractTemplateCol, findStr);
+            if (count == 0)
+            {
+                return new JArray { new JObject { { "count", count }, { "list", new JArray() } } };
+            }
+
+            var sortStr = new JObject { { "name", 1 } }.ToString();
+            var queryRes = mh.GetDataPages(debug_mongodbConnStr, debug_mongodbDatabase, contractTemplateCol, sortStr, pageSize, pageNum, findStr);
+            if (queryRes.Count == 0)
+            {
+                return new JArray { new JObject { { "count", count }, { "list", new JArray() } } };
+            }
+
+            var rr = queryRes.Select(p =>
+            {
+                var jo = new JObject();
+                jo["name"] = p["name"];
+                jo["filename"] = p["filename"];
+                jo["fileurl"] = p["fileurl"];
+                return jo;
+            }).ToArray();
+            return new JArray { new JObject { { "count", count }, { "list", new JArray { rr } } } };
+        }
         public JArray getTxidByAddressAndContract(string address,string contractHash, int pageNum = 1, int pageSize = 20)
         {
             address = address.address2pubkeyHashN();
