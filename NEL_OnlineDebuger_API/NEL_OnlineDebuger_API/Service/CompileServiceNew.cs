@@ -61,7 +61,10 @@ namespace NEL_OnlineDebuger_API.Service
                 System.Diagnostics.ProcessStartInfo info = new System.Diagnostics.ProcessStartInfo();
                 info.WorkingDirectory = cs_path;
                 info.FileName = "dotnet";
-                info.Arguments = string.Format("neon.dll {0}", contractFileName);
+                if(version == "3.0.0-Preview1")
+                    info.Arguments = string.Format("neon.dll {0}", contractFileName);
+                else
+                    info.Arguments = string.Format("neon.dll -f {0}", contractFileName);
                 info.CreateNoWindow = true;
                 info.RedirectStandardOutput = true;
                 info.RedirectStandardError = true;
